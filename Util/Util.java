@@ -1,13 +1,16 @@
 package Util;
 
-
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 import org.powbot.mobile.script.ScriptManager;
 
-import static GEctofuntus.GEctofuntus.state;
 
 public class Util {
+
+    public static String state(String s) {
+        System.out.println(s);
+        return s;
+    }
 
     public static void cameraCheck() {
 //        System.out.println("Zoom: " +Camera.getZoom());

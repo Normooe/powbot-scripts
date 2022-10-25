@@ -7,8 +7,6 @@ import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 
-import static GEctofuntus.GEctofuntus.state;
-
 public class CrushBones extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;
@@ -30,12 +28,12 @@ public class CrushBones extends Task {
         } else if (c.p().tile().equals(Constants.STUCK_BANK_TILE)) {
             // Webwalker gets stuck here - https://github.com/powbot/issues/issues/142
             // Can deprecate handleStuckBank() once issues are fixed.
-            state("Getting unstuck");
+            GEctofuntus.currentState = Util.state("Getting unstuck");
             handleStuckBank();
         } else if (!Constants.LOADER_AREA.contains(c.p().tile())) {
             // Webwalker can get stuck behind barrier inside also - https://github.com/powbot/issues/issues/141#issuecomment-1288236687
             // Can deprecate goToAltar() once issues are fixed.
-            state("Going to loader");
+            GEctofuntus.currentState = Util.state("Going to loader");
             goToAltar();
             if (Movement.walkTo(Constants.LOADER_AREA.getRandomTile())) {
                 Condition.wait(() -> Constants.LOADER_AREA.contains(c.p().tile()), 200, 40);
@@ -46,7 +44,7 @@ public class CrushBones extends Task {
     }
     
     public void putBonesInLoader(GameObject loader) {
-        state("Loading bones");
+        GEctofuntus.currentState = Util.state("Loading bones");
         Game.tab(Game.Tab.INVENTORY);
         Item bones = Inventory.stream().name(GEctofuntus.boneType).first();
         if (bones.valid()) {
@@ -66,26 +64,26 @@ public class CrushBones extends Task {
 
     public void bankItems() {
         if (!Constants.BANK_AREA.contains(c.p().tile())) {
-            state("Going to bank");
+            GEctofuntus.currentState = Util.state("Going to bank");
             getToBank();
             Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 40);
         } else if (!Bank.opened()) {
-            state("Opening bank");
+            GEctofuntus.currentState = Util.state("Opening bank");
             if (Bank.open()) {
                 Condition.wait(Bank::opened, 100, 20);
             }
         } else if (Inventory.stream().name(GEctofuntus.bonemealType).isNotEmpty()) {
-            state("Depositing items");
+            GEctofuntus.currentState = Util.state("Depositing items");
             if (Bank.depositInventory()) {
                 Condition.wait(Inventory::isEmpty, 100, 20);
             }
         } else if (Inventory.stream().name(GEctofuntus.boneType).isEmpty()) {
-            state("Withdrawing items");
+            GEctofuntus.currentState = Util.state("Withdrawing items");
             if (Bank.withdraw(GEctofuntus.boneType, 14)) {
                 Condition.wait(() -> Inventory.stream().name(GEctofuntus.boneType).count() == 14, 100, 20);
             }
         } else if (Inventory.stream().name("Pot").isEmpty()) {
-            state("Withdrawing items");
+            GEctofuntus.currentState = Util.state("Withdrawing items");
             if (Bank.withdraw("Pot", 14)) {
                 Condition.wait(() -> Inventory.stream().name("Pot").count() == 14, 100, 20);
             }
@@ -140,19 +138,19 @@ public class CrushBones extends Task {
             return;
         }
         Util.turnTo(barrier);
-        state("Interacting with barrier");
+        GEctofuntus.currentState = Util.state("Interacting with barrier");
         if (barrier.interact("Pass")) {
             Condition.wait(Chat::canContinue, 150, 20);
-            state("Clicking continue on barrier dialog");
+            GEctofuntus.currentState = Util.state("Clicking continue on barrier dialog");
             if (Chat.clickContinue()) {
-                state("Waiting to get inside");
+                GEctofuntus.currentState = Util.state("Waiting to get inside");
                 Condition.wait(() -> Players.local().tile().equals(Constants.BARRIER_TILE_WEST) || Players.local().tile().equals(Constants.BARRIER_TILE_EAST), 150, 20);
             }
         }
     }
 
     public void crushAllBones() {
-        GEctofuntus.state("Crushing bones");
+        GEctofuntus.currentState = Util.state("Crushing bones");
         GameObject loader = Objects.stream().name("Loader").nearest().first();
         GameObject boneGrinder = Objects.stream().name("Bone grinder").nearest().first();
         GameObject bin = Objects.stream().name("Bin").nearest().first();

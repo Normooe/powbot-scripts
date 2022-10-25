@@ -28,12 +28,12 @@ public class BuySlime extends Task {
         if (Inventory.isFull()) {
             bankItems();
         } else if (!Constants.CHARTER_CREW_AREA.contains(c.p().tile())) {
-            GEctofuntus.state("Going to charter crew");
+            GEctofuntus.currentState = Util.state("Going to charter crew");
             if (Movement.walkTo(Constants.CHARTER_CREW_AREA.getRandomTile())) {
                 Condition.wait(() -> Constants.CHARTER_CREW_AREA.contains(c.p().tile()), 100, 20);
             }
         } else if (!Store.opened() && !needToHop) {
-            GEctofuntus.state("Trading charter crew");
+            GEctofuntus.currentState = Util.state("Trading charter crew");
             Npc charterCrew = Npcs.stream().name("Trader Crewmember").nearest().first();
             if (charterCrew.valid()) {
                 Util.turnTo(charterCrew);
@@ -42,13 +42,13 @@ public class BuySlime extends Task {
                 }
             }
         } else if (Store.opened() && Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize() > 0) {
-            GEctofuntus.state("Buying slime");
+            GEctofuntus.currentState = Util.state("Buying slime");
             if (Store.buy(Constants.BUCKET_OF_SLIME_ID, 10)) {
                 Condition.wait(() -> Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize() == 0, 100, 10);
             }
         } else {
             needToHop = true;
-            GEctofuntus.state("World hopping");
+            GEctofuntus.currentState = Util.state("World hopping");
             if (Store.opened()) {
                 if (Store.close()) {
                     Condition.wait(() -> !Store.opened(), 100, 20);
@@ -72,13 +72,13 @@ public class BuySlime extends Task {
 
     public void bankItems() {
         if (!Constants.BANK_AREA.contains(c.p().tile())) {
-            GEctofuntus.state("Running to bank");
+            GEctofuntus.currentState = Util.state("Running to bank");
             if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
                 Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 20);
             }
         } else {
             if (!Bank.opened()) {
-                GEctofuntus.state("Opening bank");
+                GEctofuntus.currentState = Util.state("Opening bank");
                 GameObject bankBooth = Objects.stream().name("Bank booth").nearest().first();
                 if (bankBooth.valid()) {
                     Util.turnTo(bankBooth);
@@ -87,7 +87,7 @@ public class BuySlime extends Task {
                     }
                 }
             } else {
-                GEctofuntus.state("Depositing items");
+                GEctofuntus.currentState = Util.state("Depositing items");
                 if (Bank.depositAllExcept("Coins")) {
                     Condition.wait(() -> Inventory.items().length == 1, 100, 10);
                 }

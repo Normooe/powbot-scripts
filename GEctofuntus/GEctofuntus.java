@@ -102,9 +102,9 @@ public class GEctofuntus extends AbstractScript {
 
     @Override
     public void onStart() {
-        state("Starting GEctofuntus - Gavin101...");
+        currentState = Util.state("Starting GEctofuntus - Gavin101...");
         Condition.wait(() -> Players.local().valid(), 500, 50);
-        state("Checking Camera");
+        currentState = Util.state("Checking Camera");
         Util.cameraCheck();
         // Get script settings
         needSlime = getOption("Buy slime");
@@ -124,7 +124,7 @@ public class GEctofuntus extends AbstractScript {
         createBonemealMap(boneToBonemeal);
         bonemealType = getBonemealType();
         if (java.util.Objects.equals(bonemealType, "")) {
-            state("Couldn't find a valid bonemeal mapping.");
+            currentState = Util.state("Couldn't find a valid bonemeal mapping.");
             Util.endScript();
         }
 
@@ -140,15 +140,10 @@ public class GEctofuntus extends AbstractScript {
         getItemCounts();
     }
 
-    public static void state(String s) {
-        currentState = s;
-        System.out.println(s);
-    }
-
     public static void getItemCounts() {
-        state("Getting item counts");
+        currentState = Util.state("Getting item counts");
         if (!Constants.BANK_AREA.contains(Players.local().tile())) {
-            GEctofuntus.state("Running to bank");
+            currentState = Util.state("Running to bank");
             if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
                 Condition.wait(() -> Constants.BANK_AREA.contains(Players.local().tile()), 200, 20);
             }
@@ -159,7 +154,7 @@ public class GEctofuntus extends AbstractScript {
                 Util.turnTo(bankBooth);
                 if (Bank.open()) {
                     Condition.wait(Bank::opened, 100, 20);
-                    GEctofuntus.state("Checking bank");
+                    currentState = Util.state("Checking bank");
                     boneCount = Bank.stream().name(boneType).first().stackSize();
                     bonemealCount = Bank.stream().name(bonemealType).first().stackSize();
                     slimeCount = Bank.stream().name("Bucket of slime").first().stackSize();
