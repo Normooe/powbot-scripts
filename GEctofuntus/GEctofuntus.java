@@ -136,8 +136,13 @@ public class GEctofuntus extends AbstractScript {
                 .build();
         addPaint(paint);
 
-        // Get counts of bones, bonemeal, empty pots and slime
+        // Get counts of bones, bonemeal, empty pots and slime.
         getItemCounts();
+
+//        // For testing.
+//        bonemealCount = 500;
+//        slimeCount = 500;
+//        boneCount = 0;
     }
 
     public static void getItemCounts() {

@@ -103,7 +103,7 @@ public class CrushBones extends Task {
             if (!c.p().tile().equals(Constants.BARRIER_TILE_EAST)) {
                 Movement.walkTo(Constants.BARRIER_TILE_EAST);
             } else {
-                GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
+                GameObject barrier = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Energy Barrier").nearest().first();
                 if (barrier.valid() && barrier.reachable()) {
                     Util.turnTo(barrier);
                     if (barrier.interact("Pass")) {
@@ -125,7 +125,7 @@ public class CrushBones extends Task {
     }
 
     public void enterBarrier() {
-        GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
+        GameObject barrier = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Energy Barrier").nearest().first();
         if (!barrier.valid()) {
             return;
         }
@@ -143,9 +143,9 @@ public class CrushBones extends Task {
 
     public void crushAllBones() {
         GEctofuntus.currentState = Util.state("Crushing bones");
-        GameObject loader = Objects.stream().name("Loader").nearest().first();
-        GameObject boneGrinder = Objects.stream().name("Bone grinder").nearest().first();
-        GameObject bin = Objects.stream().name("Bin").nearest().first();
+        GameObject loader = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Loader").nearest().first();
+        GameObject boneGrinder = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bone grinder").nearest().first();
+        GameObject bin = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bin").nearest().first();
 
         if (boneGrinder.valid()) {
             Util.turnTo(boneGrinder);

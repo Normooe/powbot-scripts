@@ -32,7 +32,7 @@ public class BuySlime extends Task {
             Movement.walkTo(Constants.CHARTER_CREW_AREA.getRandomTile());
         } else if (!Store.opened() && !needToHop) {
             GEctofuntus.currentState = Util.state("Trading charter crew");
-            Npc charterCrew = Npcs.stream().name("Trader Crewmember").nearest().first();
+            Npc charterCrew = Npcs.stream().within(10).name("Trader Crewmember").nearest().first();
             if (charterCrew.valid()) {
                 Util.turnTo(charterCrew);
                 if (charterCrew.interact("Trade")) {
@@ -75,7 +75,7 @@ public class BuySlime extends Task {
         } else {
             if (!Bank.opened()) {
                 GEctofuntus.currentState = Util.state("Opening bank");
-                GameObject bankBooth = Objects.stream().name("Bank booth").nearest().first();
+                GameObject bankBooth = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bank booth").nearest().first();
                 if (bankBooth.valid()) {
                     Util.turnTo(bankBooth);
                     if (bankBooth.interact("Bank")) {

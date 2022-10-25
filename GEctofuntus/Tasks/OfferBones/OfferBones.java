@@ -48,7 +48,7 @@ public class OfferBones extends Task {
     }
 
     public void collectTokens() {
-        Npc ghost = Npcs.stream().name("Ghost disciple").nearest().first();
+        Npc ghost = Npcs.stream().within(10).name("Ghost disciple").nearest().first();
         if (!ghost.valid()) {
             return;
         }
@@ -86,7 +86,7 @@ public class OfferBones extends Task {
 
     public void offerBones() {
         Game.tab(Game.Tab.INVENTORY);
-        GameObject ectofuntus = Objects.stream().name("Ectofuntus").nearest().first();
+        GameObject ectofuntus = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Ectofuntus").nearest().first();
         if (!ectofuntus.valid()) {
             return;
         }
@@ -141,7 +141,7 @@ public class OfferBones extends Task {
             if (!c.p().tile().equals(Constants.BARRIER_TILE_EAST)) {
                 Movement.walkTo(Constants.BARRIER_TILE_EAST);
             } else {
-                GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
+                GameObject barrier = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Energy Barrier").nearest().first();
                 if (barrier.valid() && barrier.reachable()) {
                     Util.turnTo(barrier);
                     if (barrier.interact("Pass")) {
@@ -165,7 +165,7 @@ public class OfferBones extends Task {
     }
 
     public void enterBarrier() {
-        GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
+        GameObject barrier = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Energy Barrier").nearest().first();
         if (!barrier.valid()) {
             return;
         }
