@@ -1,4 +1,4 @@
-package GEctofuntus;
+package Util;
 
 
 import org.powbot.api.Condition;

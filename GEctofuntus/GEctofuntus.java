@@ -3,6 +3,7 @@ package GEctofuntus;
 import GEctofuntus.Tasks.BuySlime;
 import GEctofuntus.Tasks.CrushBones;
 import GEctofuntus.Tasks.OfferBones;
+import Util.Util;
 import com.google.common.eventbus.Subscribe;
 import org.powbot.api.Condition;
 import org.powbot.api.event.MessageEvent;

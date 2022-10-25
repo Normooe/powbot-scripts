@@ -3,7 +3,7 @@ package GEctofuntus.Tasks;
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Constants;
 import GEctofuntus.Task;
-import GEctofuntus.Util;
+import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 
