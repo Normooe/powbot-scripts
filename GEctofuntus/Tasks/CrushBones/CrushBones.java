@@ -1,4 +1,4 @@
-package GEctofuntus.Tasks;
+package GEctofuntus.Tasks.CrushBones;
 
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Constants;
@@ -35,9 +35,7 @@ public class CrushBones extends Task {
             // Can deprecate goToAltar() once issues are fixed.
             GEctofuntus.currentState = Util.state("Going to loader");
             goToAltar();
-            if (Movement.walkTo(Constants.LOADER_AREA.getRandomTile())) {
-                Condition.wait(() -> Constants.LOADER_AREA.contains(c.p().tile()), 200, 40);
-            }
+            Movement.walkTo(Constants.LOADER_AREA.getRandomTile());
         } else {
             crushAllBones();
         }
@@ -92,13 +90,9 @@ public class CrushBones extends Task {
 
     public void getToBank() {
         if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
-            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
-                Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 40);
-            }
+            Movement.walkTo(Constants.BANK_AREA.getRandomTile());
         } else if (!Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
-            if (Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile())) {
-                Condition.wait(() -> c.p().tile() == Constants.BARRIER_TILE_EAST || c.p().tile() == Constants.BARRIER_TILE_WEST, 200, 40);
-            }
+            Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile());
         } else {
             enterBarrier();
         }
@@ -107,9 +101,7 @@ public class CrushBones extends Task {
     public void goToAltar() {
         if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
             if (!c.p().tile().equals(Constants.BARRIER_TILE_EAST)) {
-                if (Movement.walkTo(Constants.BARRIER_TILE_EAST)) {
-                    Condition.wait(() -> c.p().tile().equals(Constants.BARRIER_TILE_EAST), 200, 40);
-                }
+                Movement.walkTo(Constants.BARRIER_TILE_EAST);
             } else {
                 GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
                 if (barrier.valid() && barrier.reachable()) {

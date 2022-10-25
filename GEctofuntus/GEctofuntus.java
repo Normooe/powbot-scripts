@@ -1,8 +1,8 @@
 package GEctofuntus;
 
-import GEctofuntus.Tasks.BuySlime;
-import GEctofuntus.Tasks.CrushBones;
-import GEctofuntus.Tasks.OfferBones;
+import GEctofuntus.Tasks.BuySlime.BuySlime;
+import GEctofuntus.Tasks.CrushBones.CrushBones;
+import GEctofuntus.Tasks.OfferBones.OfferBones;
 import Util.Util;
 import com.google.common.eventbus.Subscribe;
 import org.powbot.api.Condition;
@@ -144,9 +144,7 @@ public class GEctofuntus extends AbstractScript {
         currentState = Util.state("Getting item counts");
         if (!Constants.BANK_AREA.contains(Players.local().tile())) {
             currentState = Util.state("Running to bank");
-            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
-                Condition.wait(() -> Constants.BANK_AREA.contains(Players.local().tile()), 200, 20);
-            }
+            Movement.walkTo(Constants.BANK_AREA.getRandomTile());
         }
         GameObject bankBooth = Objects.stream().name("Bank booth").nearest().first();
         if (bankBooth.valid()) {

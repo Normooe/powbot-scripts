@@ -1,4 +1,4 @@
-package GEctofuntus.Tasks;
+package GEctofuntus.Tasks.BuySlime;
 
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Constants;
@@ -29,9 +29,7 @@ public class BuySlime extends Task {
             bankItems();
         } else if (!Constants.CHARTER_CREW_AREA.contains(c.p().tile())) {
             GEctofuntus.currentState = Util.state("Going to charter crew");
-            if (Movement.walkTo(Constants.CHARTER_CREW_AREA.getRandomTile())) {
-                Condition.wait(() -> Constants.CHARTER_CREW_AREA.contains(c.p().tile()), 100, 20);
-            }
+            Movement.walkTo(Constants.CHARTER_CREW_AREA.getRandomTile());
         } else if (!Store.opened() && !needToHop) {
             GEctofuntus.currentState = Util.state("Trading charter crew");
             Npc charterCrew = Npcs.stream().name("Trader Crewmember").nearest().first();
@@ -73,9 +71,7 @@ public class BuySlime extends Task {
     public void bankItems() {
         if (!Constants.BANK_AREA.contains(c.p().tile())) {
             GEctofuntus.currentState = Util.state("Running to bank");
-            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
-                Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 20);
-            }
+            Movement.walkTo(Constants.BANK_AREA.getRandomTile());
         } else {
             if (!Bank.opened()) {
                 GEctofuntus.currentState = Util.state("Opening bank");

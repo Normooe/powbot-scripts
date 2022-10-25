@@ -1,4 +1,4 @@
-package GEctofuntus.Tasks;
+package GEctofuntus.Tasks.OfferBones;
 
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Constants;
@@ -128,13 +128,9 @@ public class OfferBones extends Task {
 
     public void getToBank() {
         if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
-            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
-                Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 80);
-            }
+            Movement.walkTo(Constants.BANK_AREA.getRandomTile());
         } else if (!Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
-            if (Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile())) {
-                Condition.wait(() -> c.p().tile() == Constants.BARRIER_TILE_EAST || c.p().tile() == Constants.BARRIER_TILE_WEST, 200, 40);
-            }
+            Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile());
         } else {
             enterBarrier();
         }
@@ -143,9 +139,7 @@ public class OfferBones extends Task {
     public void goToAltar() {
         if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
             if (!c.p().tile().equals(Constants.BARRIER_TILE_EAST)) {
-                if (Movement.walkTo(Constants.BARRIER_TILE_EAST)) {
-                    Condition.wait(() -> c.p().tile().equals(Constants.BARRIER_TILE_EAST), 100, 10);
-                }
+                Movement.walkTo(Constants.BARRIER_TILE_EAST);
             } else {
                 GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
                 if (barrier.valid() && barrier.reachable()) {
@@ -156,9 +150,7 @@ public class OfferBones extends Task {
                 }
             }
         } else {
-            if (Movement.walkTo(Constants.ALTAR_BOT_FLOOR.getRandomTile())) {
-                Condition.wait(() -> Constants.ALTAR_BOT_FLOOR.contains(c.p().tile()), 200, 20);
-            }
+            Movement.walkTo(Constants.ALTAR_BOT_FLOOR.getRandomTile());
         }
     }
 
