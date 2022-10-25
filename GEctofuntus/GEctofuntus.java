@@ -3,7 +3,6 @@ package GEctofuntus;
 import GEctofuntus.Tasks.BuySlime;
 import GEctofuntus.Tasks.CrushBones;
 import GEctofuntus.Tasks.OfferBones;
-import com.android.tools.r8.graph.I;
 import com.google.common.eventbus.Subscribe;
 import org.powbot.api.Condition;
 import org.powbot.api.event.MessageEvent;
@@ -20,8 +19,6 @@ import org.powbot.mobile.service.ScriptUploader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static GEctofuntus.Constants.bankArea;
 
 @ScriptManifest(
         name = "GEctofuntus",
@@ -61,8 +58,8 @@ import static GEctofuntus.Constants.bankArea;
 )
 
 public class GEctofuntus extends AbstractScript {
-    private ArrayList<Task> taskList = new ArrayList<Task>();
-    private Constants c = new Constants();
+    private ArrayList<Task> taskList = new ArrayList<>();
+    private final Constants c = new Constants();
 
     // Script vars
     public static String currentState = "null";
@@ -149,10 +146,10 @@ public class GEctofuntus extends AbstractScript {
 
     public static void getItemCounts() {
         state("Getting item counts");
-        if (!bankArea.contains(Players.local().tile())) {
+        if (!Constants.BANK_AREA.contains(Players.local().tile())) {
             GEctofuntus.state("Running to bank");
-            if (Movement.walkTo(bankArea.getRandomTile())) {
-                Condition.wait(() -> bankArea.contains(Players.local().tile()), 200, 20);
+            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
+                Condition.wait(() -> Constants.BANK_AREA.contains(Players.local().tile()), 200, 20);
             }
         }
         GameObject bankBooth = Objects.stream().name("Bank booth").nearest().first();

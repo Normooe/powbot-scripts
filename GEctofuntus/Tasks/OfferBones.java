@@ -7,18 +7,10 @@ import GEctofuntus.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 
-import static GEctofuntus.Constants.*;
-
-
 public class OfferBones extends Task {
-    private Constants c = new Constants();
+    private final Constants c = new Constants();
     GEctofuntus main;
 
-    // task vars
-    Component altarFullDialogue = Widgets.widget(229).component(1);
-    public static final int altarFullDialogueID = 229;
-    public static final int ghostDialogueID = 217;
-    public static final int ghostDialogueComponentID = 6;
     public OfferBones(GEctofuntus main) {
         super();
         super.name = "OfferBones";
@@ -35,18 +27,18 @@ public class OfferBones extends Task {
         if (Inventory.stream().name(GEctofuntus.bonemealType).count() == 0 || Inventory.stream().name("Bucket of slime").count() == 0 || Inventory.stream().name("Ecto-token").count() > 0) {
             GEctofuntus.state("Banking items");
             bankItems();
-        } else if (c.p().tile().equals(STUCK_BANK_TILE)) {
+        } else if (c.p().tile().equals(Constants.STUCK_BANK_TILE)) {
             // Webwalker gets stuck here - https://github.com/powbot/issues/issues/142
             // Can deprecate handleStuckBank() once issues are fixed.
             GEctofuntus.state("Getting unstuck");
             handleStuckBank();
-        } else if (!ALTAR_BOT_FLOOR.contains(c.p().tile())) {
+        } else if (!Constants.ALTAR_BOT_FLOOR.contains(c.p().tile())) {
             GEctofuntus.state("Going to altar");
             goToAltar();
         } else if (GEctofuntus.needToCollectTokens) {
             GEctofuntus.state("Collecting tokens");
             collectTokens();
-        } else if (Widgets.widget(altarFullDialogueID).component(1).text().contains("room to put any more in")) {
+        } else if (Widgets.widget(Constants.altarFullDialogueID).component(1).text().contains("room to put any more in")) {
             GEctofuntus.state("Setting needToCollectTokens = true");
             GEctofuntus.needToCollectTokens = true;
         } else if (!GEctofuntus.needToCollectTokens){
@@ -78,12 +70,12 @@ public class OfferBones extends Task {
             }
         }
         Util.turnTo(ghost);
-        if (!Widgets.widget(ghostDialogueID).valid()) {
+        if (!Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid()) {
             GEctofuntus.state("Talking to ghost");
             if (ghost.interact("Talk-to")) {
-                Condition.wait(() -> Widgets.widget(ghostDialogueID).valid(), 200, 40);
+                Condition.wait(() -> Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid(), 200, 40);
             }
-        } else if (Widgets.widget(ghostDialogueID).valid()) {
+        } else if (Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid()) {
             GEctofuntus.state("Continuing chat");
             if (Chat.completeChat()) {
                 Condition.wait(() -> !Chat.chatting(), 200, 20);
@@ -107,10 +99,10 @@ public class OfferBones extends Task {
     }
 
     public void bankItems() {
-        if (!Constants.bankArea.contains(c.p().tile())) {
+        if (!Constants.BANK_AREA.contains(c.p().tile())) {
             GEctofuntus.state("Going to bank");
             getToBank();
-            Condition.wait(() -> Constants.bankArea.contains(c.p().tile()), 200, 40);
+            Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 40);
         } else if (!Bank.opened()) {
             GEctofuntus.state("Opening bank");
             if (Bank.open()) {
@@ -135,13 +127,13 @@ public class OfferBones extends Task {
     }
 
     public void getToBank() {
-        if (PORT_PHASMATYS.contains(c.p().tile())) {
-            if (Movement.walkTo(Constants.bankArea.getRandomTile())) {
-                Condition.wait(() -> Constants.bankArea.contains(c.p().tile()), 200, 80);
+        if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
+            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
+                Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 80);
             }
-        } else if (!BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
-            if (Movement.walkTo(BARRIER_ALTAR_SIDE.getRandomTile())) {
-                Condition.wait(() -> c.p().tile() == BARRIER_TILE_EAST || c.p().tile() == BARRIER_TILE_WEST, 200, 40);
+        } else if (!Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
+            if (Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile())) {
+                Condition.wait(() -> c.p().tile() == Constants.BARRIER_TILE_EAST || c.p().tile() == Constants.BARRIER_TILE_WEST, 200, 40);
             }
         } else {
             enterBarrier();
@@ -149,23 +141,23 @@ public class OfferBones extends Task {
     }
 
     public void goToAltar() {
-        if (PORT_PHASMATYS.contains(c.p().tile())) {
-            if (!c.p().tile().equals(BARRIER_TILE_EAST)) {
-                if (Movement.walkTo(BARRIER_TILE_EAST)) {
-                    Condition.wait(() -> c.p().tile().equals(BARRIER_TILE_EAST), 100, 10);
+        if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
+            if (!c.p().tile().equals(Constants.BARRIER_TILE_EAST)) {
+                if (Movement.walkTo(Constants.BARRIER_TILE_EAST)) {
+                    Condition.wait(() -> c.p().tile().equals(Constants.BARRIER_TILE_EAST), 100, 10);
                 }
             } else {
                 GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
                 if (barrier.valid() && barrier.reachable()) {
                     Util.turnTo(barrier);
                     if (barrier.interact("Pass")) {
-                        Condition.wait(() -> BARRIER_ALTAR_SIDE.contains(c.p().tile()), 100, 40);
+                        Condition.wait(() -> Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile()), 100, 40);
                     }
                 }
             }
         } else {
-            if (Movement.walkTo(ALTAR_BOT_FLOOR.getRandomTile())) {
-                Condition.wait(() -> ALTAR_BOT_FLOOR.contains(c.p().tile()), 200, 20);
+            if (Movement.walkTo(Constants.ALTAR_BOT_FLOOR.getRandomTile())) {
+                Condition.wait(() -> Constants.ALTAR_BOT_FLOOR.contains(c.p().tile()), 200, 20);
             }
         }
     }
@@ -175,7 +167,7 @@ public class OfferBones extends Task {
         if (ghost.valid() && ghost.reachable()) {
             Util.turnTo(ghost);
             if (ghost.interact("Talk-to")) {
-                Condition.wait(() -> !c.p().tile().equals(STUCK_BANK_TILE), 100, 20);
+                Condition.wait(() -> !c.p().tile().equals(Constants.STUCK_BANK_TILE), 100, 20);
             }
         }
     }
@@ -192,7 +184,7 @@ public class OfferBones extends Task {
             GEctofuntus.state("Clicking continue on barrier dialog");
             if (Chat.clickContinue()) {
                 GEctofuntus.state("Waiting to get inside");
-                Condition.wait(() -> Players.local().tile().equals(BARRIER_TILE_WEST) || Players.local().tile().equals(BARRIER_TILE_EAST), 150, 20);
+                Condition.wait(() -> Players.local().tile().equals(Constants.BARRIER_TILE_WEST) || Players.local().tile().equals(Constants.BARRIER_TILE_EAST), 150, 20);
             }
         }
     }

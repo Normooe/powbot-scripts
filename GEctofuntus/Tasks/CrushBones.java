@@ -4,20 +4,14 @@ import GEctofuntus.GEctofuntus;
 import GEctofuntus.Constants;
 import GEctofuntus.Task;
 import GEctofuntus.Util;
-import org.powbot.api.Area;
 import org.powbot.api.Condition;
-import org.powbot.api.Tile;
 import org.powbot.api.rt4.*;
 
-import static GEctofuntus.Constants.*;
 import static GEctofuntus.GEctofuntus.state;
 
 public class CrushBones extends Task {
-    private Constants c = new Constants();
+    private final Constants c = new Constants();
     GEctofuntus main;
-
-    // task vars
-    Area loaderArea = new Area(new Tile(3657, 3526, 1), new Tile(3661, 3524, 1));
 
     public CrushBones(GEctofuntus main) {
         super();
@@ -33,18 +27,18 @@ public class CrushBones extends Task {
     public void execute() {
         if (Inventory.stream().name("Pot").isEmpty()) {
             bankItems();
-        } else if (c.p().tile().equals(STUCK_BANK_TILE)) {
+        } else if (c.p().tile().equals(Constants.STUCK_BANK_TILE)) {
             // Webwalker gets stuck here - https://github.com/powbot/issues/issues/142
             // Can deprecate handleStuckBank() once issues are fixed.
             state("Getting unstuck");
             handleStuckBank();
-        } else if (!loaderArea.contains(c.p().tile())) {
+        } else if (!Constants.LOADER_AREA.contains(c.p().tile())) {
             // Webwalker can get stuck behind barrier inside also - https://github.com/powbot/issues/issues/141#issuecomment-1288236687
             // Can deprecate goToAltar() once issues are fixed.
             state("Going to loader");
             goToAltar();
-            if (Movement.walkTo(loaderArea.getRandomTile())) {
-                Condition.wait(() -> loaderArea.contains(c.p().tile()), 200, 40);
+            if (Movement.walkTo(Constants.LOADER_AREA.getRandomTile())) {
+                Condition.wait(() -> Constants.LOADER_AREA.contains(c.p().tile()), 200, 40);
             }
         } else {
             crushAllBones();
@@ -71,10 +65,10 @@ public class CrushBones extends Task {
 
 
     public void bankItems() {
-        if (!Constants.bankArea.contains(c.p().tile())) {
+        if (!Constants.BANK_AREA.contains(c.p().tile())) {
             state("Going to bank");
             getToBank();
-            Condition.wait(() -> Constants.bankArea.contains(c.p().tile()), 200, 40);
+            Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 40);
         } else if (!Bank.opened()) {
             state("Opening bank");
             if (Bank.open()) {
@@ -99,13 +93,13 @@ public class CrushBones extends Task {
     }
 
     public void getToBank() {
-        if (PORT_PHASMATYS.contains(c.p().tile())) {
-            if (Movement.walkTo(Constants.bankArea.getRandomTile())) {
-                Condition.wait(() -> Constants.bankArea.contains(c.p().tile()), 200, 40);
+        if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
+            if (Movement.walkTo(Constants.BANK_AREA.getRandomTile())) {
+                Condition.wait(() -> Constants.BANK_AREA.contains(c.p().tile()), 200, 40);
             }
-        } else if (!BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
-            if (Movement.walkTo(BARRIER_ALTAR_SIDE.getRandomTile())) {
-                Condition.wait(() -> c.p().tile() == BARRIER_TILE_EAST || c.p().tile() == BARRIER_TILE_WEST, 200, 40);
+        } else if (!Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
+            if (Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile())) {
+                Condition.wait(() -> c.p().tile() == Constants.BARRIER_TILE_EAST || c.p().tile() == Constants.BARRIER_TILE_WEST, 200, 40);
             }
         } else {
             enterBarrier();
@@ -113,17 +107,17 @@ public class CrushBones extends Task {
     }
 
     public void goToAltar() {
-        if (PORT_PHASMATYS.contains(c.p().tile())) {
-            if (!c.p().tile().equals(BARRIER_TILE_EAST)) {
-                if (Movement.walkTo(BARRIER_TILE_EAST)) {
-                    Condition.wait(() -> c.p().tile().equals(BARRIER_TILE_EAST), 200, 40);
+        if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
+            if (!c.p().tile().equals(Constants.BARRIER_TILE_EAST)) {
+                if (Movement.walkTo(Constants.BARRIER_TILE_EAST)) {
+                    Condition.wait(() -> c.p().tile().equals(Constants.BARRIER_TILE_EAST), 200, 40);
                 }
             } else {
                 GameObject barrier = Objects.stream().name("Energy Barrier").nearest().first();
                 if (barrier.valid() && barrier.reachable()) {
                     Util.turnTo(barrier);
                     if (barrier.interact("Pass")) {
-                        Condition.wait(() -> BARRIER_ALTAR_SIDE.contains(c.p().tile()), 100, 40);
+                        Condition.wait(() -> Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile()), 100, 40);
                     }
                 }
             }
@@ -135,7 +129,7 @@ public class CrushBones extends Task {
         if (ghost.valid() && ghost.reachable()) {
             Util.turnTo(ghost);
             if (ghost.interact("Talk-to")) {
-                Condition.wait(() -> !c.p().tile().equals(STUCK_BANK_TILE), 250, 40);
+                Condition.wait(() -> !c.p().tile().equals(Constants.STUCK_BANK_TILE), 250, 40);
             }
         }
     }
@@ -152,7 +146,7 @@ public class CrushBones extends Task {
             state("Clicking continue on barrier dialog");
             if (Chat.clickContinue()) {
                 state("Waiting to get inside");
-                Condition.wait(() -> Players.local().tile().equals(BARRIER_TILE_WEST) || Players.local().tile().equals(BARRIER_TILE_EAST), 150, 20);
+                Condition.wait(() -> Players.local().tile().equals(Constants.BARRIER_TILE_WEST) || Players.local().tile().equals(Constants.BARRIER_TILE_EAST), 150, 20);
             }
         }
     }
