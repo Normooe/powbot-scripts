@@ -1,4 +1,4 @@
 package GEctofuntus.Tasks.Common;
 
-public class BankItems {
+public class Placeholder {
 }

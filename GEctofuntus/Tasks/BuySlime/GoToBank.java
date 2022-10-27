@@ -1,4 +1,4 @@
-package GEctofuntus.Tasks.Common;
+package GEctofuntus.Tasks.BuySlime;
 
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
@@ -18,10 +18,12 @@ public class GoToBank extends Task {
     }
     @Override
     public boolean activate() {
-        return false;
+        return (Inventory.isFull() || Inventory.stream().name("Coins").first().stackSize() < 1000) && !Constants.BANK_AREA.contains(c.p().tile());
     }
 
     @Override
     public void execute() {
+        GEctofuntus.currentState = Util.state("Going to bank");
+        Movement.walkTo(Constants.BANK_AREA.getRandomTile());
     }
 }
