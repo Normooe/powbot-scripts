@@ -31,7 +31,8 @@ public class Util {
         }
     }
 
-    public static void endScript() {
+    public static void endScript(String exitMsg) {
+        Util.state(exitMsg);
         if (Game.logout()) {
             Condition.wait(() -> !Game.loggedIn(), 500, 20);
             ScriptManager.INSTANCE.stop();

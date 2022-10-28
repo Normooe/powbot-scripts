@@ -1,5 +1,5 @@
 # https://oldschool.runescape.wiki/w/Server?action=edit&section=3
-# Copy paste all the world lines from above source into file that gets opened below and run script.
+# Copy and paste all the world lines from above source into file that gets opened below and run script.
 
 import requests
 
@@ -18,5 +18,4 @@ for line in text:
 		worlds.append(int(world_number))
 
 
-print("Worlds:")
-print(worlds)
+print(f"Worlds:\n {worlds}")

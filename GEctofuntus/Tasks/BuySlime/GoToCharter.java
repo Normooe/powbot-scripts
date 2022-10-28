@@ -3,6 +3,7 @@ package GEctofuntus.Tasks.BuySlime;
 import GEctofuntus.Constants;
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
+import Util.Util;
 import org.powbot.api.rt4.Inventory;
 import org.powbot.api.rt4.Movement;
 
@@ -22,7 +23,7 @@ public class GoToCharter extends Task {
 
     @Override
     public void execute() {
-        GEctofuntus.currentState = "Going to charter";
+        GEctofuntus.currentState = Util.state("Going to charter");
         Movement.walkTo(Constants.CHARTER_CREW_AREA.getRandomTile());
     }
 }

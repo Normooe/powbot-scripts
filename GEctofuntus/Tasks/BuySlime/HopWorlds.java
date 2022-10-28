@@ -29,7 +29,7 @@ public class HopWorlds extends Task {
 
     @Override
     public void execute() {
-        Util.state("Hopping worlds");
+        GEctofuntus.currentState = Util.state("Hopping worlds");
         World hopWorld = Worlds.stream().id(Constants.WORLD_LIST[worldIndex]).first();
         if (hopWorld.valid() && Arrays.stream(worldsUsed).noneMatch(i -> i == hopWorld.getNumber())) {
             if (hopWorld.hop()) {

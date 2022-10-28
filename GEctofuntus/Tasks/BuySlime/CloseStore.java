@@ -23,7 +23,7 @@ public class CloseStore extends Task {
 
     @Override
     public void execute() {
-        Util.state("Closing store");
+        GEctofuntus.currentState = Util.state("Closing store");
         if (Store.close()) {
             Condition.wait(() -> !Store.opened(), 100, 20);
         }

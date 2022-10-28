@@ -3,6 +3,7 @@ package GEctofuntus.Tasks.Common;
 import GEctofuntus.Constants;
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
+import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.Bank;
 import org.powbot.api.rt4.Inventory;
@@ -23,7 +24,7 @@ public class OpenBank extends Task {
 
     @Override
     public void execute() {
-        GEctofuntus.currentState = "Opening bank";
+        GEctofuntus.currentState = Util.state("Opening bank");
         if (Bank.present()) {
             if (Bank.open()) {
                 Condition.wait(Bank::opened, 100, 20);

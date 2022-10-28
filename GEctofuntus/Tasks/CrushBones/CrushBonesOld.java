@@ -7,11 +7,11 @@ import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 
-public class CrushBones extends Task {
+public class CrushBonesOld extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;
 
-    public CrushBones(GEctofuntus main) {
+    public CrushBonesOld(GEctofuntus main) {
         super();
         super.name = "CrushBones";
         this.main = main;

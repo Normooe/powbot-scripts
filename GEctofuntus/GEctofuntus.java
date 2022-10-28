@@ -1,9 +1,10 @@
 package GEctofuntus;
 
 import GEctofuntus.Tasks.BuySlime.*;
+import GEctofuntus.Tasks.BuySlime.BankItems;
+import GEctofuntus.Tasks.BuySlime.GoToBank;
 import GEctofuntus.Tasks.Common.OpenBank;
-import GEctofuntus.Tasks.CrushBones.CrushBones;
-import GEctofuntus.Tasks.OfferBones.OfferBones;
+import GEctofuntus.Tasks.CrushBones.*;
 import Util.Util;
 import com.google.common.eventbus.Subscribe;
 import org.powbot.api.Condition;
@@ -148,17 +149,25 @@ public class GEctofuntus extends AbstractScript {
             buySlimeTasks.add(new CloseStore(this));
             buySlimeTasks.add(new HopWorlds(this));
         }
-//        if (needBonemeal) {
-//            crushBonesTasks.add(new CrushBones(this));
-//        }
+        if (needBonemeal) {
+            crushBonesTasks.add(new GEctofuntus.Tasks.CrushBones.GoToBank(this));
+            crushBonesTasks.add(new OpenBank(this));
+            crushBonesTasks.add(new GEctofuntus.Tasks.CrushBones.BankItems(this));
+            crushBonesTasks.add(new CloseBank(this));
+            crushBonesTasks.add(new TeleportToAltar(this));
+            crushBonesTasks.add(new GoToCrusher(this));
+            crushBonesTasks.add(new GetGrinderStatus(this));
+            crushBonesTasks.add(new LoadGrinder(this));
+            crushBonesTasks.add(new WindGrinder(this));
+            crushBonesTasks.add(new CollectBonemeal(this));
+        }
 //        if (needToOffer) {
 //            offerBonesTasks.add(new OfferBones(this));
 //        }
         createBonemealMap(boneToBonemeal);
         bonemealType = getBonemealType();
         if (java.util.Objects.equals(bonemealType, "")) {
-            currentState = Util.state("Couldn't find a valid bonemeal mapping.");
-            Util.endScript();
+            Util.endScript("Couldn't find a valid bonemeal mapping.");
         }
 
         Paint paint = new PaintBuilder()
@@ -184,10 +193,8 @@ public class GEctofuntus extends AbstractScript {
             currentState = Util.state("Running to bank");
             Movement.walkTo(Constants.BANK_AREA.getRandomTile());
         }
-        GameObject bankBooth = Objects.stream().name("Bank booth").nearest().first();
-        if (bankBooth.valid()) {
+        if (Bank.present()) {
             if (!Bank.opened()) {
-                Util.turnTo(bankBooth);
                 if (Bank.open()) {
                     Condition.wait(Bank::opened, 100, 20);
                     currentState = Util.state("Checking bank");
