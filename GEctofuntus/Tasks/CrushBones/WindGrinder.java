@@ -27,9 +27,12 @@ public class WindGrinder extends Task {
     public void execute() {
         GEctofuntus.currentState = Util.state("Winding grinder");
         GameObject boneGrinder = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bone grinder").nearest().first();
-        if (boneGrinder.interact("Wind")) {
-            GEctofuntus.needToWindGrinder = false;
-            Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+        if (boneGrinder.valid()) {
+            Util.turnTo(boneGrinder);
+            if (boneGrinder.interact("Wind")) {
+                GEctofuntus.needToWindGrinder = false;
+                Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+            }
         }
     }
 }

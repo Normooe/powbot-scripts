@@ -35,9 +35,12 @@ public class LoadGrinder extends Task {
                 }
             } else {
                 GameObject loader = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Loader").nearest().first();
-                if (loader.interact("Use", false)) {
-                    GEctofuntus.needToLoadBones = false;
-                    Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+                if (loader.valid()) {
+                    Util.turnTo(loader);
+                    if (loader.interact("Use", false)) {
+                        GEctofuntus.needToLoadBones = false;
+                        Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+                    }
                 }
             }
         }

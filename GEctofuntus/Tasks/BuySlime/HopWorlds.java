@@ -5,17 +5,19 @@ import GEctofuntus.Task;
 import GEctofuntus.Constants;
 import Util.Util;
 import org.powbot.api.Condition;
+import org.powbot.api.rt4.Store;
 import org.powbot.api.rt4.World;
 import org.powbot.api.rt4.Worlds;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class HopWorlds extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;
 
     public static int worldIndex = 0;
-    public static int[] worldsUsed = {Worlds.current().getNumber()};
 
     public HopWorlds(GEctofuntus main) {
         super();
@@ -24,14 +26,18 @@ public class HopWorlds extends Task {
     }
     @Override
     public boolean activate() {
-        return GEctofuntus.needToHop;
+        return GEctofuntus.needToHop && !Store.opened();
     }
 
     @Override
     public void execute() {
-        GEctofuntus.currentState = Util.state("Hopping worlds");
         World hopWorld = Worlds.stream().id(Constants.WORLD_LIST[worldIndex]).first();
-        if (hopWorld.valid() && Arrays.stream(worldsUsed).noneMatch(i -> i == hopWorld.getNumber())) {
+        if (hopWorld.getNumber() == Worlds.current().getNumber()) {
+            worldIndex++;
+            return;
+        }
+        GEctofuntus.currentState = Util.state("Hopping worlds: " +hopWorld.getNumber());
+        if (hopWorld.valid()) {
             if (hopWorld.hop()) {
                 Condition.wait(() -> Worlds.current().getNumber() == Constants.WORLD_LIST[worldIndex], 200, 20);
                 GEctofuntus.needToHop = false;

@@ -8,6 +8,8 @@ import org.powbot.api.Condition;
 import org.powbot.api.rt4.Bank;
 import org.powbot.api.rt4.Inventory;
 
+import java.util.Objects;
+
 public class OpenBank extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;
@@ -19,7 +21,16 @@ public class OpenBank extends Task {
     }
     @Override
     public boolean activate() {
-        return Constants.BANK_AREA.contains(c.p().tile()) && !Bank.opened() && Inventory.isFull();
+        if (Constants.BANK_AREA.contains(c.p().tile()) && !Bank.opened()) {
+            if (Objects.equals(GEctofuntus.currentTask, "CrushBones")) {
+                return Inventory.stream().name(GEctofuntus.bonemealType).count() == 13;
+            } else if (Objects.equals(GEctofuntus.currentTask, "BuySlime")) {
+                return Inventory.stream().name("Bucket of slime").count() == 27;
+            } else if (Objects.equals(GEctofuntus.currentTask, "OfferBones")) {
+                return Inventory.stream().name(GEctofuntus.bonemealType).isEmpty() || Inventory.stream().name("Bucket of slime").isEmpty();
+            }
+        }
+        return false;
     }
 
     @Override

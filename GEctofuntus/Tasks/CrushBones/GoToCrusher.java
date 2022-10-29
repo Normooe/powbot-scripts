@@ -4,6 +4,7 @@ import GEctofuntus.Constants;
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import Util.Util;
+import org.powbot.api.Condition;
 import org.powbot.api.rt4.GameObject;
 import org.powbot.api.rt4.Inventory;
 import org.powbot.api.rt4.Objects;
@@ -19,7 +20,9 @@ public class GoToCrusher extends Task {
     }
     @Override
     public boolean activate() {
-        return Constants.ALTAR_BOT_FLOOR.contains(c.p().tile()) && Inventory.stream().name(GEctofuntus.boneType).count() == 13;
+        return Constants.ALTAR_BOT_FLOOR.contains(c.p().tile())
+                && Inventory.stream().name(GEctofuntus.boneType).count() == 13
+                && c.p().animation() == -1;
     }
 
     @Override
@@ -27,8 +30,9 @@ public class GoToCrusher extends Task {
         GEctofuntus.currentState = Util.state("Going to crusher");
         GameObject staircase = Objects.stream().name("Staircase").within(10).nearest().first();
         if (staircase.valid()) {
+            Util.turnTo(staircase);
             if (staircase.interact("Climb-up")) {
-                Constants.ALTAR_TOP_FLOOR.contains(c.p().tile());
+                Condition.wait(() -> Constants.ALTAR_TOP_FLOOR.contains(c.p().tile()), 150, 40);
             }
         }
     }

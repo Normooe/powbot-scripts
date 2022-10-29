@@ -19,7 +19,10 @@ public class GetGrinderStatus extends Task {
     }
     @Override
     public boolean activate() {
-        return !GEctofuntus.needToCollectBones && !GEctofuntus.needToLoadBones && !GEctofuntus.needToWindGrinder;
+        return Constants.ALTAR_TOP_FLOOR.contains(c.p().tile())
+                && !GEctofuntus.needToLoadBones
+                && !GEctofuntus.needToWindGrinder
+                && !GEctofuntus.needToCollectBones;
     }
 
     @Override

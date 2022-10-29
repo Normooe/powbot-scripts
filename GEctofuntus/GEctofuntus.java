@@ -1,15 +1,18 @@
 package GEctofuntus;
 
+
 import GEctofuntus.Tasks.BuySlime.*;
-import GEctofuntus.Tasks.BuySlime.BankItems;
-import GEctofuntus.Tasks.BuySlime.GoToBank;
-import GEctofuntus.Tasks.Common.OpenBank;
+import GEctofuntus.Tasks.Common.*;
 import GEctofuntus.Tasks.CrushBones.*;
+import GEctofuntus.Tasks.OfferBones.CollectTokens;
+import GEctofuntus.Tasks.OfferBones.OfferBones;
 import Util.Util;
 import com.google.common.eventbus.Subscribe;
 import org.powbot.api.Condition;
+import org.powbot.api.event.InventoryChangeEvent;
 import org.powbot.api.event.MessageEvent;
-import org.powbot.api.rt4.*;
+import org.powbot.api.event.SkillExpGainedEvent;
+import org.powbot.api.rt4.Players;
 import org.powbot.api.rt4.walking.model.Skill;
 import org.powbot.api.script.AbstractScript;
 import org.powbot.api.script.OptionType;
@@ -17,15 +20,18 @@ import org.powbot.api.script.ScriptConfiguration;
 import org.powbot.api.script.ScriptManifest;
 import org.powbot.api.script.paint.Paint;
 import org.powbot.api.script.paint.PaintBuilder;
-import org.powbot.mobile.script.ScriptManager;
 import org.powbot.mobile.service.ScriptUploader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import static GEctofuntus.Tasks.Common.GetItemCounts.getItemCounts;
 
 @ScriptManifest(
         name = "GEctofuntus",
-        description = "Purchases slime, crushes bones, and prays at Ectofuntus.",
+        description = "Purchases slime, crushes bones, and offers bones at Ectofuntus.",
         version = "0.0.1",
         author = "Gavin101"
 )
@@ -37,6 +43,12 @@ import java.util.HashMap;
                         description = "Buys slime from crewtraders in Port Phasmatys.",
                         optionType = OptionType.BOOLEAN,
                         defaultValue = "true"
+                ),
+                @ScriptConfiguration(
+                        name = "Slime amount",
+                        description = "Amount of slime to buy",
+                        optionType = OptionType.INTEGER,
+                        defaultValue = "0"
                 ),
                 @ScriptConfiguration(
                         name = "Crush bones",
@@ -53,7 +65,7 @@ import java.util.HashMap;
                 ),
                 @ScriptConfiguration(
                         name = "Offer bones",
-                        description = "Offer bones + slime to the altar.",
+                        description = "Offer bonemeal + slime to the altar.",
                         optionType = OptionType.BOOLEAN,
                         defaultValue = "true"
                 )
@@ -64,22 +76,28 @@ public class GEctofuntus extends AbstractScript {
     private ArrayList<Task> buySlimeTasks = new ArrayList<>();
     private ArrayList<Task> crushBonesTasks = new ArrayList<>();
     private ArrayList<Task> offerBonesTasks = new ArrayList<>();
+    private ArrayList<Task> getItemCountTasks = new ArrayList<>();
     private final Constants c = new Constants();
 
     // Script vars
     public static String currentState = "null";
+    public static String currentTask = "null";
     public static boolean needToHop = false;
     public static boolean needSlime;
     public static boolean needBonemeal;
     public static boolean needToOffer;
     public static String boneType;
-    public static int boneCounter;
-    public static int boneCount;
-    public static int slimeCount;
+    public static int slimeToBuy = -1;
+    public static int slimeCounter = 0;
+    public static int bonemealCounter = 0;
+    public static int offerCounter = 0;
+    public static long boneCount = -1;
+    public static long slimeCount = -1;
+    public static long bonemealCount = -1;
     public static String bonemealType;
-    public static int bonemealCount;
-    public static int potCount;
+    public static int potCount = -1;
     public static HashMap<String, String> boneToBonemeal = new HashMap<>();
+    public static Map<String,Integer> requiredItems = new HashMap<String,Integer>();
 
     // bone grinder status vars
     public static boolean needToLoadBones;
@@ -93,36 +111,38 @@ public class GEctofuntus extends AbstractScript {
         new ScriptUploader().uploadAndStart("GEctofuntus", "main", "127.0.0.1:5585", true, true);
     }
 
+    public ArrayList<Task> getTaskList() {
+        if (slimeCount == -1) {
+            currentTask = "GetItemCounts";
+            return getItemCountTasks;
+        } else if (needSlime) {
+            requiredItems.clear();
+            requiredItems.put("Coins", 10000);
+            currentTask = "BuySlime";
+            return buySlimeTasks;
+        } else if (needBonemeal) {
+            requiredItems.clear();
+            requiredItems.put("Ectophial", 1);
+            requiredItems.put(boneType, 13);
+            requiredItems.put("Pot", 13);
+            currentTask = "CrushBones";
+            return crushBonesTasks;
+        } else if (needToOffer) {
+            requiredItems.clear();
+            requiredItems.put("Ectophial", 1);
+            requiredItems.put(bonemealType, 13);
+            requiredItems.put("Bucket of slime", 13);
+            currentTask = "OfferBones";
+            return offerBonesTasks;
+        }
+        return null;
+    }
+
     @Override
     public void poll() {
-        if (needSlime) {
-            for (Task task : buySlimeTasks) {
-                if (task.activate()) {
-                    task.execute();
-                    if (ScriptManager.INSTANCE.isStopping()) {
-                        break;
-                    }
-                }
-            }
-        }
-        if (needBonemeal) {
-            for (Task task : crushBonesTasks) {
-                if (task.activate()) {
-                    task.execute();
-                    if (ScriptManager.INSTANCE.isStopping()) {
-                        break;
-                    }
-                }
-            }
-        }
-        if (needToOffer) {
-            for (Task task : offerBonesTasks) {
-                if (task.activate()) {
-                    task.execute();
-                    if (ScriptManager.INSTANCE.isStopping()) {
-                        break;
-                    }
-                }
+        for (Task task : getTaskList()) {
+            if (task.activate()) {
+                task.execute();
             }
         }
     }
@@ -135,24 +155,28 @@ public class GEctofuntus extends AbstractScript {
         Util.cameraCheck();
         // Get script settings
         needSlime = getOption("Buy slime");
+        slimeToBuy = getOption("Slime amount");
         needBonemeal = getOption("Crush bones");
         needToOffer = getOption("Offer bones");
         boneType = getOption("Bones");
         // Build task list
+        getItemCountTasks.add(new GoToBank(this));
+        getItemCountTasks.add(new GetItemCounts(this));
+
         if (needSlime) {
             buySlimeTasks.add(new GoToBank(this));
             buySlimeTasks.add(new OpenBank(this));
             buySlimeTasks.add(new BankItems(this));
             buySlimeTasks.add(new GoToCharter(this));
             buySlimeTasks.add(new TradeCharter(this));
-            buySlimeTasks.add(new BuySlime(this));
+            buySlimeTasks.add(new BuyItem(this));
             buySlimeTasks.add(new CloseStore(this));
             buySlimeTasks.add(new HopWorlds(this));
         }
         if (needBonemeal) {
-            crushBonesTasks.add(new GEctofuntus.Tasks.CrushBones.GoToBank(this));
+            crushBonesTasks.add(new GoToBank(this));
             crushBonesTasks.add(new OpenBank(this));
-            crushBonesTasks.add(new GEctofuntus.Tasks.CrushBones.BankItems(this));
+            crushBonesTasks.add(new BankItems(this));
             crushBonesTasks.add(new CloseBank(this));
             crushBonesTasks.add(new TeleportToAltar(this));
             crushBonesTasks.add(new GoToCrusher(this));
@@ -161,9 +185,15 @@ public class GEctofuntus extends AbstractScript {
             crushBonesTasks.add(new WindGrinder(this));
             crushBonesTasks.add(new CollectBonemeal(this));
         }
-//        if (needToOffer) {
-//            offerBonesTasks.add(new OfferBones(this));
-//        }
+        if (needToOffer) {
+            offerBonesTasks.add(new GoToBank(this));
+            offerBonesTasks.add(new OpenBank(this));
+            offerBonesTasks.add(new BankItems(this));
+            offerBonesTasks.add(new CloseBank(this));
+            offerBonesTasks.add(new TeleportToAltar(this));
+            offerBonesTasks.add(new CollectTokens(this));
+            offerBonesTasks.add(new OfferBones(this));
+        }
         createBonemealMap(boneToBonemeal);
         bonemealType = getBonemealType();
         if (java.util.Objects.equals(bonemealType, "")) {
@@ -171,44 +201,13 @@ public class GEctofuntus extends AbstractScript {
         }
 
         Paint paint = new PaintBuilder()
-                .addString(() -> "Current State: " +currentState)
-                .addString(() -> "Bones offered: " +boneCounter)
-                .trackInventoryItem(Constants.ECTO_TOKEN_ID)
+                .addString(() -> "Current State: "      +currentState)
                 .trackSkill(Skill.Prayer)
+                .addString(() -> "Slime bought: "       +slimeCounter)
+                .addString(() -> "Bones crushed: "      +bonemealCounter)
+                .addString(() -> "Bonemeal offered: "   +offerCounter)
                 .build();
         addPaint(paint);
-
-        // Get counts of bones, bonemeal, empty pots and slime.
-//        getItemCounts();
-
-//        // For testing.
-        bonemealCount = 500;
-        slimeCount = 0;
-        boneCount = 0;
-    }
-
-    public static void getItemCounts() {
-        currentState = Util.state("Getting item counts");
-        if (!Constants.BANK_AREA.contains(Players.local().tile())) {
-            currentState = Util.state("Running to bank");
-            Movement.walkTo(Constants.BANK_AREA.getRandomTile());
-        }
-        if (Bank.present()) {
-            if (!Bank.opened()) {
-                if (Bank.open()) {
-                    Condition.wait(Bank::opened, 100, 20);
-                    currentState = Util.state("Checking bank");
-                    boneCount = Bank.stream().name(boneType).first().stackSize();
-                    bonemealCount = Bank.stream().name(bonemealType).first().stackSize();
-                    slimeCount = Bank.stream().name("Bucket of slime").first().stackSize();
-                    potCount = Bank.stream().name("Pot").first().stackSize();
-                    System.out.println("Bone count: " +boneCount);
-                    System.out.println("Bonemeal count: " +bonemealCount);
-                    System.out.println("Slime count: " +slimeCount);
-                    System.out.println("Pot count: " +potCount);
-                }
-            }
-        }
     }
 
     public static void createBonemealMap(HashMap<String, String> bonemealMap) {
@@ -238,6 +237,22 @@ public class GEctofuntus extends AbstractScript {
             needToCollectBones = true;
         } else if (text.contains("in the hopper")) {
             needToWindGrinder = true;
+        }
+    }
+
+    @Subscribe
+    public void onInventoryChange(InventoryChangeEvent e) {
+        if (Objects.equals(e.getItemName(), bonemealType)) {
+            if (Constants.ALTAR_TOP_FLOOR.contains(c.p().tile())) {
+                bonemealCounter++;
+            }
+        }
+    }
+
+    @Subscribe
+    public void onSkillExpGainedEvent(SkillExpGainedEvent e) {
+        if (e.getSkill() == Skill.Prayer) {
+            offerCounter++;
         }
     }
 }
