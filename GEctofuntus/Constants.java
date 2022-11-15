@@ -40,7 +40,8 @@ public class Constants {
     public static final int GHOST_DIALOGUE_COMPONENT_ID = 6;
     // my stuff
     public static final Area BANK_AREA = new Area(new Tile(3686, 3467, 0), new Tile(3690, 3466, 0));
-    public static final Area PORT_PHASMATYS = new Area(new Tile(3659, 3507, 0), new Tile(3691, 3466, 0));
+//    public static final Area PORT_PHASMATYS = new Area(new Tile(3659, 3507, 0), new Tile(3691, 3466, 0));
+    public static final Area PORT_PHASMATYS = new Area(new Tile(3657, 3507, 0), new Tile(3711, 3460, 0));
     public static final Area ALTAR_BOT_FLOOR = new Area(new Tile(3655, 3524, 0), new Tile(3664, 3514, 0));
     public static final Area ALTAR_TOP_FLOOR = new Area(new Tile(3654, 3526, 1), new Tile(3667, 3521, 1));
     public static final Area BARRIER_ALTAR_SIDE = new Area(new Tile(3658, 3509, 0), new Tile(3660, 3511, 0));

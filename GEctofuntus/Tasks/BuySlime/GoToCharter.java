@@ -18,7 +18,10 @@ public class GoToCharter extends Task {
     }
     @Override
     public boolean activate() {
-        return !Inventory.isFull() && !Constants.CHARTER_CREW_AREA.contains(c.p().tile());
+        return !Inventory.isFull()
+                && !Constants.CHARTER_CREW_AREA.contains(c.p().tile())
+                && !GEctofuntus.needToHop
+                && GEctofuntus.needSlime;
     }
 
     @Override

@@ -20,9 +20,6 @@ public class GoToBank extends Task {
     }
     @Override
     public boolean activate() {
-        if (c.p().movementAnimation() > 808) {
-            return false;
-        }
         if (Objects.equals(GEctofuntus.currentTask, "BuySlime")) {
             return (Inventory.isFull() || Inventory.stream().name("Coins").first().stackSize() < 1000) && !Constants.BANK_AREA.contains(c.p().tile());
         } else if (Objects.equals(GEctofuntus.currentTask, "CrushBones")) {
@@ -43,15 +40,23 @@ public class GoToBank extends Task {
     }
 
     public void getToBank() {
-        if (Constants.ALTAR_TOP_FLOOR.contains(c.p().tile())) {
-            Util.useEctophial();
-        } else if (Constants.PORT_PHASMATYS.contains(c.p().tile()) || Constants.CHARTER_CREW_AREA.contains(c.p().tile())) {
+        if (Constants.PORT_PHASMATYS.contains(c.p().tile())) {
             Movement.walkTo(Constants.BANK_AREA.getRandomTile());
         } else if (!Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
             Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile());
         } else {
             enterBarrier();
         }
+
+//        if (Constants.ALTAR_TOP_FLOOR.contains(c.p().tile())) {
+//            Util.useEctophial();
+//        } else if (Constants.PORT_PHASMATYS.contains(c.p().tile()) || Constants.CHARTER_CREW_AREA.contains(c.p().tile())) {
+//            Movement.walkTo(Constants.BANK_AREA.getRandomTile());
+//        } else if (!Constants.BARRIER_ALTAR_SIDE.contains(c.p().tile())) {
+//            Movement.walkTo(Constants.BARRIER_ALTAR_SIDE.getRandomTile());
+//        } else {
+//            enterBarrier();
+//        }
     }
 
     public void enterBarrier() {

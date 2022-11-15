@@ -15,7 +15,7 @@ public class Util {
 
     public static void cameraCheck() {
 //        System.out.println("Zoom: " +Camera.getZoom());
-        if (Camera.getZoom() >= 10) {
+        if (Camera.getZoom() < 90) {
             state("Zooming camera out");
             Camera.moveZoomSlider(9);
         }
@@ -34,9 +34,14 @@ public class Util {
 
     public static void endScript(String exitMsg) {
         Util.state(exitMsg);
-        ScriptManager.INSTANCE.stop();
+        if (Bank.opened()) {
+            if (Bank.close()) {
+                Condition.wait(() -> !Bank.opened(), 150, 20);
+            }
+        }
         if (Game.logout()) {
             Condition.wait(() -> !Game.loggedIn(), 500, 20);
+            ScriptManager.INSTANCE.stop();
         }
     }
 

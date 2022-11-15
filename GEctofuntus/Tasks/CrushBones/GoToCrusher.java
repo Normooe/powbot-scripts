@@ -5,6 +5,7 @@ import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import Util.Util;
 import org.powbot.api.Condition;
+import org.powbot.api.rt4.Camera;
 import org.powbot.api.rt4.GameObject;
 import org.powbot.api.rt4.Inventory;
 import org.powbot.api.rt4.Objects;
@@ -30,9 +31,13 @@ public class GoToCrusher extends Task {
         GEctofuntus.currentState = Util.state("Going to crusher");
         GameObject staircase = Objects.stream().name("Staircase").within(10).nearest().first();
         if (staircase.valid()) {
-            Util.turnTo(staircase);
-            if (staircase.interact("Climb-up")) {
-                Condition.wait(() -> Constants.ALTAR_TOP_FLOOR.contains(c.p().tile()), 150, 40);
+            if (staircase.inViewport()) {
+                if (staircase.interact("Climb-up")) {
+                    Condition.wait(() -> Constants.ALTAR_TOP_FLOOR.contains(c.p().tile()), 150, 40);
+                }
+            } else {
+                Camera.turnTo(staircase);
+                Condition.wait(staircase::inViewport, 150, 20);
             }
         }
     }

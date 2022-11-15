@@ -49,7 +49,7 @@ public class GetItemCounts extends Task {
                 System.out.println("Pot count: " +GEctofuntus.potCount);
 
                 // for testing
-                GEctofuntus.boneCount = 50;
+//                GEctofuntus.boneCount = 50;
 //                GEctofuntus.slimeCount = 298;
 
                 // verify functions could probably be refactored into 1 later.

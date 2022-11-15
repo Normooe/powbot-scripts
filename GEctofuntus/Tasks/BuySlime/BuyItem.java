@@ -5,6 +5,7 @@ import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import Util.Util;
 import org.powbot.api.Condition;
+import org.powbot.api.rt4.Inventory;
 import org.powbot.api.rt4.Store;
 
 public class BuyItem extends Task {
@@ -19,7 +20,7 @@ public class BuyItem extends Task {
 
     @Override
     public boolean activate() {
-        return Store.opened();
+        return Store.opened() && !Inventory.isFull();
     }
 
     @Override

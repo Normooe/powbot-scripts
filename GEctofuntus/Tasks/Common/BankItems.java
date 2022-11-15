@@ -41,7 +41,8 @@ public class BankItems extends Task {
             }
         } else if (Objects.equals(GEctofuntus.currentTask, "CrushBones")) {
             GEctofuntus.bonemealCount = Bank.stream().name(GEctofuntus.bonemealType).first().stackSize() + Inventory.stream().name(GEctofuntus.bonemealType).count();
-            if (GEctofuntus.bonemealCount >= GEctofuntus.slimeCount) {
+            GEctofuntus.boneCount = Bank.stream().name(GEctofuntus.boneType).first().stackSize() + Inventory.stream().name(GEctofuntus.boneType).count();
+            if (GEctofuntus.bonemealCount >= GEctofuntus.slimeCount || GEctofuntus.boneCount < 13) {
                 System.out.println("We have enough bonemeal. Setting needBonemeal = false");
                 GEctofuntus.needBonemeal = false;
             }
@@ -60,27 +61,22 @@ public class BankItems extends Task {
     public void bankItems(Map<String, Integer> requiredItems) {
         System.out.println("Required Items: " +requiredItems);
         depositAnyExcept(requiredItems);
-        GEctofuntus.currentState = Util.state("Withdrawing items");
+        GEctofuntus.currentState = Util.state("bank items");
         for (Map.Entry<String,Integer> entry : requiredItems.entrySet()) {
             String itemName = entry.getKey();
             int numOfItem = entry.getValue();
-            // Withdraw needed item
+            // Check if we need to withdraw the item
             long invyItemCount = Inventory.stream().name(itemName).count();
-            if (invyItemCount < numOfItem && Inventory.stream().name(itemName).first().stackSize() < numOfItem) {
-                System.out.println(invyItemCount +" is less than required number: " +numOfItem);
+            long invyItemStackSize = Inventory.stream().name(itemName).first().stackSize();
+            if (invyItemCount < numOfItem && invyItemStackSize < numOfItem) {
+                // Withdraw needed item
+                System.out.println(invyItemCount + "/" + invyItemStackSize + " " + itemName + " in inventory is less than required number: " +numOfItem);
                 int amountToWithdraw = (int) (numOfItem - invyItemCount);
                 if (Bank.stream().name(itemName).first().stackSize() >= amountToWithdraw) {
-                    System.out.println("Withdrawing "+amountToWithdraw +" " +itemName);
+                    System.out.println("Withdrawing "+amountToWithdraw + " " +itemName);
                     if (Bank.withdraw(itemName, amountToWithdraw)) {
                         Condition.wait(() -> Inventory.stream().name(itemName).count() == numOfItem
                                 ||  Inventory.stream().name(itemName).first().stackSize() == numOfItem, 150, 20);
-                    }
-                } else {
-                    if (Bank.opened()) {
-                        if (Bank.close()) {
-                            Condition.wait(() -> !Bank.opened(), 150, 30);
-                            Util.endScript("Couldn't find " +amountToWithdraw +" of required item: " +itemName +",ending script..");
-                        }
                     }
                 }
             }

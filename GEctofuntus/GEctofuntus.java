@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static GEctofuntus.Tasks.Common.GetItemCounts.getItemCounts;
 
 @ScriptManifest(
         name = "GEctofuntus",
