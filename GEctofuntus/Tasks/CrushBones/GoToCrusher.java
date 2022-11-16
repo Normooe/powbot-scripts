@@ -5,10 +5,7 @@ import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import Util.Util;
 import org.powbot.api.Condition;
-import org.powbot.api.rt4.Camera;
-import org.powbot.api.rt4.GameObject;
-import org.powbot.api.rt4.Inventory;
-import org.powbot.api.rt4.Objects;
+import org.powbot.api.rt4.*;
 
 public class GoToCrusher extends Task {
     private final Constants c = new Constants();
@@ -36,9 +33,14 @@ public class GoToCrusher extends Task {
                     Condition.wait(() -> Constants.ALTAR_TOP_FLOOR.contains(c.p().tile()), 150, 40);
                 }
             } else {
+                System.out.println("Turning camera to staircase");
                 Camera.turnTo(staircase);
                 Condition.wait(staircase::inViewport, 150, 20);
             }
         }
     }
 }
+
+//        if (Game.closeOpenTab()) {
+//                Condition.wait(() -> Game.ta == null, 150, 20);
+//                }

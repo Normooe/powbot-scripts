@@ -14,10 +14,10 @@ public class Util {
     }
 
     public static void cameraCheck() {
-//        System.out.println("Zoom: " +Camera.getZoom());
-        if (Camera.getZoom() < 90) {
+        Game.tab(Game.Tab.SETTINGS);
+        if (Camera.getZoom() > 1) {
             state("Zooming camera out");
-            Camera.moveZoomSlider(9);
+            Camera.moveZoomSlider(0);
         }
         if (Camera.pitch() < 90) {
             state("Changing camera angle");
@@ -36,12 +36,14 @@ public class Util {
         Util.state(exitMsg);
         if (Bank.opened()) {
             if (Bank.close()) {
-                Condition.wait(() -> !Bank.opened(), 150, 20);
+                Condition.wait(() -> !Bank.opened(), 250, 50);
             }
         }
-        if (Game.logout()) {
-            Condition.wait(() -> !Game.loggedIn(), 500, 20);
-            ScriptManager.INSTANCE.stop();
+        if (Game.loggedIn()) {
+            if (Game.logout()) {
+                Condition.wait(() -> !Game.loggedIn(), 250, 50);
+                ScriptManager.INSTANCE.stop();
+            }
         }
     }
 
