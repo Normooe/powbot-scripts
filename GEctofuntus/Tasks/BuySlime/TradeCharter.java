@@ -31,10 +31,10 @@ public class TradeCharter extends Task {
         if (charterCrew.valid()) {
             if (charterCrew.inViewport() && charterCrew.interact("Trade")) {
                 Condition.wait(Store::opened, 100, 20);
+            } else {
+                System.out.println("Turning camera to charterCrew");
+                Camera.turnTo(charterCrew);
             }
-        } else {
-            System.out.println("Turning camera to charterCrew");
-            Camera.turnTo(charterCrew);
         }
     }
 }
