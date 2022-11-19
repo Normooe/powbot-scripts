@@ -7,9 +7,6 @@ import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.Bank;
 import org.powbot.api.rt4.Inventory;
-import org.powbot.api.rt4.Movement;
-
-import java.util.Objects;
 
 public class GetItemCounts extends Task {
     private final Constants c = new Constants();

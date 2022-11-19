@@ -28,27 +28,25 @@ public class CollectTokens extends Task {
 
     public void collectTokens() {
         Npc ghost = Npcs.stream().within(10).name("Ghost disciple").nearest().first();
-        if (!ghost.valid()) {
-            return;
-        }
         // Drop an item to make room for ecto-tokens if needed
         if (Inventory.isFull() && Inventory.stream().name("Ecto-token").isEmpty()) {
             GEctofuntus.currentState = Util.state("Dropping an item for ecto-tokens");
             dropItem();
         } else if (!Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid()) {
             GEctofuntus.currentState = Util.state("Talking to ghost");
-            if (ghost.interact("Talk-to")) {
-                Condition.wait(() -> Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid(), 200, 40);
+            if (ghost.valid()) {
+                if (ghost.inViewport() && ghost.interact("Talk-to")) {
+                    Condition.wait(() -> Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid(), 200, 40);
+                } else {
+                    System.out.println("Turning camera to ghost");
+                    Camera.turnTo(ghost);
+                }
             }
         } else if (Widgets.widget(Constants.GHOST_DIALOGUE_ID).valid()) {
             GEctofuntus.currentState = Util.state("Continuing chat");
-            if (Chat.completeChat()) {
-                Condition.wait(() -> !Chat.chatting(), 200, 20);
+            if (Chat.completeChat() && Condition.wait(() -> !Chat.chatting(), 200, 20)) {
                 GEctofuntus.needToCollectTokens = false;
             }
-        } else if (!ghost.inViewport()) {
-            Camera.turnTo(ghost);
-            Condition.wait(ghost::inViewport, 150, 20);
         }
     }
 

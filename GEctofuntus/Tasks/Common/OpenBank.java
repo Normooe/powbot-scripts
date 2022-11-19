@@ -9,7 +9,6 @@ import org.powbot.api.rt4.Bank;
 import org.powbot.api.rt4.Inventory;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class OpenBank extends Task {
     private final Constants c = new Constants();

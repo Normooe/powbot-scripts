@@ -28,11 +28,13 @@ public class CollectBonemeal extends Task {
     public void execute() {
         GEctofuntus.currentState = Util.state("Collecting bonemeal");
         GameObject bin = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bin").nearest().first();
-        if (!bin.inViewport()) {
-            Camera.turnTo(bin);
-            Condition.wait(bin::inViewport, 150, 20);
-        } else if (bin.valid() && bin.interact("Empty") && Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800)) {
-            GEctofuntus.needToCollectBones = false;
+        if (bin.valid()) {
+            if (bin.inViewport() && bin.interact("Empty") && Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800)) { // This conditional wait feels weird. Should probably revisit.
+                GEctofuntus.needToCollectBones = false;
+            } else {
+                System.out.println("Turning camera to bin");
+                Camera.turnTo(bin);
+            }
         }
     }
 }

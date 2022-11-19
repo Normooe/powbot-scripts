@@ -7,9 +7,8 @@ import org.powbot.api.Condition;
 import org.powbot.api.rt4.Bank;
 import org.powbot.api.rt4.Inventory;
 
-import java.util.Objects;
-
 import Util.Util;
+
 public class CloseBank extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;

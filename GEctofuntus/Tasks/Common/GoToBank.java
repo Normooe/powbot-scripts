@@ -7,8 +7,6 @@ import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 
-import java.util.Objects;
-
 public class GoToBank extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;
@@ -53,14 +51,16 @@ public class GoToBank extends Task {
     public void enterBarrier() {
         GameObject barrier = org.powbot.api.rt4.Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Energy Barrier").nearest().first();
         GEctofuntus.currentState = Util.state("Interacting with barrier");
-        if (!barrier.inViewport()) {
-            Camera.turnTo(barrier);
-            Condition.wait(barrier::inViewport, 150, 20);
-        } else if (barrier.valid() && barrier.interact("Pass") && Condition.wait(Chat::canContinue, 150, 20)) {
-            GEctofuntus.currentState = Util.state("Clicking continue on barrier dialog");
-            if (Chat.clickContinue()) {
-                GEctofuntus.currentState = Util.state("Waiting to get inside");
-                Condition.wait(() -> Players.local().tile().equals(Constants.BARRIER_TILE_WEST) || Players.local().tile().equals(Constants.BARRIER_TILE_EAST), 150, 20);
+        if (barrier.valid()) {
+            if (barrier.inViewport() && barrier.interact("Pass") && Condition.wait(Chat::canContinue, 150, 20)) {
+                GEctofuntus.currentState = Util.state("Clicking continue on barrier dialog");
+                if (Chat.clickContinue()) {
+                    GEctofuntus.currentState = Util.state("Waiting to get inside");
+                    Condition.wait(() -> Players.local().tile().equals(Constants.BARRIER_TILE_WEST) || Players.local().tile().equals(Constants.BARRIER_TILE_EAST), 150, 20);
+                }
+            } else {
+                System.out.println("Turning camera to barrier");
+                Camera.turnTo(barrier);
             }
         }
     }

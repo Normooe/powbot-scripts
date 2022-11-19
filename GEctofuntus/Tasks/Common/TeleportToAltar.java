@@ -4,13 +4,8 @@ import GEctofuntus.Constants;
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import Util.Util;
-import org.powbot.api.Condition;
 import org.powbot.api.rt4.Bank;
-import org.powbot.api.rt4.Game;
 import org.powbot.api.rt4.Inventory;
-import org.powbot.api.rt4.Item;
-
-import java.util.Objects;
 
 public class TeleportToAltar extends Task {
     private final Constants c = new Constants();

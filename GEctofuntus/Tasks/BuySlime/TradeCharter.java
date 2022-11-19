@@ -28,11 +28,13 @@ public class TradeCharter extends Task {
     public void execute() {
         GEctofuntus.currentState = Util.state("Trading charter crew");
         Npc charterCrew = Npcs.stream().within(10).name("Trader Crewmember").nearest().first();
-        if (!charterCrew.inViewport()) {
+        if (charterCrew.valid()) {
+            if (charterCrew.inViewport() && charterCrew.interact("Trade")) {
+                Condition.wait(Store::opened, 100, 20);
+            }
+        } else {
+            System.out.println("Turning camera to charterCrew");
             Camera.turnTo(charterCrew);
-            Condition.wait(charterCrew::inViewport, 150, 20);
-        } else if (charterCrew.valid() && charterCrew.interact("Trade")) {
-            Condition.wait(Store::opened, 100, 20);
         }
     }
 }

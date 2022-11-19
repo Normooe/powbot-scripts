@@ -30,11 +30,14 @@ public class GetGrinderStatus extends Task {
     public void execute() {
         GEctofuntus.currentState = Util.state("Getting grinder status");
         GameObject boneGrinder = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bone grinder").nearest().first();
-        if (!boneGrinder.inViewport()) {
-            Camera.turnTo(boneGrinder);
-            Condition.wait(boneGrinder::inViewport, 150, 20);
-        } else if (boneGrinder.valid() && boneGrinder.interact("Status")) {
-            Condition.wait(() -> GEctofuntus.needToCollectBones || GEctofuntus.needToLoadBones || GEctofuntus.needToWindGrinder, 150, 30);
+        if (boneGrinder.valid()) {
+            if (boneGrinder.inViewport() && boneGrinder.interact("Status")) {
+                // This will set a flag using onMessage listener in GEctofuntus.java
+                Condition.wait(() -> GEctofuntus.needToCollectBones || GEctofuntus.needToLoadBones || GEctofuntus.needToWindGrinder, 150, 30);
+            } else {
+                System.out.println("Turning camera to boneGrinder");
+                Camera.turnTo(boneGrinder);
+            }
         }
     }
 }

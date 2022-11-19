@@ -10,10 +10,6 @@ import org.powbot.api.rt4.Store;
 import org.powbot.api.rt4.World;
 import org.powbot.api.rt4.Worlds;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
 public class HopWorlds extends Task {
     private final Constants c = new Constants();
     GEctofuntus main;
@@ -58,8 +54,7 @@ public class HopWorlds extends Task {
         }
         GEctofuntus.currentState = Util.state("Hopping worlds: " +hopWorld.getNumber());
         Game.tab(Game.Tab.LOGOUT);
-        if (hopWorld.valid() && hopWorld.hop()) {
-            Condition.wait(() -> Worlds.current().getNumber() == Constants.WORLD_LIST[worldIndex], 200, 20);
+        if (hopWorld.valid() && hopWorld.hop() && Condition.wait(() -> Worlds.current().getNumber() == Constants.WORLD_LIST[worldIndex], 200, 20)) {
             GEctofuntus.needToHop = false;
             worldIndex++;
             if (worldIndex > Constants.WORLD_LIST.length-1) {

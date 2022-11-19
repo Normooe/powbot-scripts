@@ -3,7 +3,6 @@ package GEctofuntus.Tasks.OfferBones;
 import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import GEctofuntus.Constants;
-import GEctofuntus.Tasks.Common.BankItems;
 import Util.Util;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
@@ -40,11 +39,13 @@ public class OfferBones extends Task {
         Game.tab(Game.Tab.INVENTORY);
         GameObject ectofuntus = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Ectofuntus").nearest().first();
         long bucketCount = Inventory.stream().name("Bucket of slime").count();
-        if (!ectofuntus.inViewport()) {
-            Camera.turnTo(ectofuntus);
-            Condition.wait(ectofuntus::inViewport, 150, 20);
-        } else if (ectofuntus.valid() && ectofuntus.interact("Worship")) {
-            Condition.wait(() -> Inventory.stream().name("Bucket of slime").count() < bucketCount, 100, 50);
+        if (ectofuntus.valid()) {
+            if (ectofuntus.inViewport() && ectofuntus.interact("Worship")) {
+                Condition.wait(() -> Inventory.stream().name("Bucket of slime").count() < bucketCount, 100, 50);
+            } else {
+                System.out.println("Turning camera to ectofuntus");
+                Camera.turnTo(ectofuntus);
+            }
         }
     }
 }

@@ -46,8 +46,8 @@ public class BankItems extends Task {
                 }
                 break;
             case "OfferBones":
-                GEctofuntus.slimeCount = Bank.stream().name("Bucket of slime").first().stackSize();
-                GEctofuntus.bonemealCount = Bank.stream().name(GEctofuntus.bonemealType).first().stackSize();
+                GEctofuntus.slimeCount = Bank.stream().name("Bucket of slime").first().stackSize() + Inventory.stream().name("Bucket of slime").count();
+                GEctofuntus.bonemealCount = Bank.stream().name(GEctofuntus.bonemealType).first().stackSize() + Inventory.stream().name(GEctofuntus.bonemealType).count();
                 if (GEctofuntus.bonemealCount < 13) {
                     Util.endScript("Less than 13 bonemeal left. Ending script");
                 } else if (GEctofuntus.slimeCount < 13) {

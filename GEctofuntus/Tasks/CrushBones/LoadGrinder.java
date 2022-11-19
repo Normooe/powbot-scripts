@@ -28,21 +28,22 @@ public class LoadGrinder extends Task {
         GEctofuntus.currentState = Util.state("Loading bones");
         Game.tab(Game.Tab.INVENTORY);
         Item bones = Inventory.stream().name(GEctofuntus.boneType).first();
-        if (!bones.valid()) {
-            return;
-        }
-        if (!Inventory.selectedItem().name().equals(GEctofuntus.boneType)) {
-            if (bones.interact("Use")) {
-                Condition.wait(() -> Inventory.selectedItem().name().equals(GEctofuntus.boneType), 150, 20);
-            }
-        } else if (Inventory.selectedItem().name().equals(GEctofuntus.boneType)) {
-            GameObject loader = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Loader").nearest().first();
-            if (!loader.inViewport()) {
-                Camera.turnTo(loader);
-                Condition.wait(loader::inViewport, 150, 20);
-            } else if (loader.valid() && loader.interact("Use", false)) {
-                GEctofuntus.needToLoadBones = false;
-                Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+        if (bones.valid()) {
+            if (!Inventory.selectedItem().name().equals(GEctofuntus.boneType)) {
+                if (bones.interact("Use")) {
+                    Condition.wait(() -> Inventory.selectedItem().name().equals(GEctofuntus.boneType), 150, 20);
+                }
+            } else if (Inventory.selectedItem().name().equals(GEctofuntus.boneType)) {
+                GameObject loader = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Loader").nearest().first();
+                if (loader.valid()) {
+                    if (loader.inViewport() && loader.interact("Use", false)) {
+                        GEctofuntus.needToLoadBones = false;
+                        Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+                    } else {
+                        System.out.println("Turning camera to loader");
+                        Camera.turnTo(loader);
+                    }
+                }
             }
         }
     }
