@@ -5,6 +5,7 @@ import GEctofuntus.GEctofuntus;
 import GEctofuntus.Task;
 import Util.Util;
 import org.powbot.api.Condition;
+import org.powbot.api.rt4.Camera;
 import org.powbot.api.rt4.GameObject;
 import org.powbot.api.rt4.Inventory;
 import org.powbot.api.rt4.Objects;
@@ -27,12 +28,12 @@ public class WindGrinder extends Task {
     public void execute() {
         GEctofuntus.currentState = Util.state("Winding grinder");
         GameObject boneGrinder = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bone grinder").nearest().first();
-        if (boneGrinder.valid()) {
-            Util.turnTo(boneGrinder);
-            if (boneGrinder.interact("Wind")) {
-                GEctofuntus.needToWindGrinder = false;
-                Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
-            }
+        if (!boneGrinder.inViewport()) {
+            Camera.turnTo(boneGrinder);
+            Condition.wait(boneGrinder::inViewport, 150, 20);
+        } else if (boneGrinder.valid() && boneGrinder.interact("Wind")) {
+            GEctofuntus.needToWindGrinder = false;
+            Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
         }
     }
 }

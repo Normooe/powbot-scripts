@@ -22,8 +22,7 @@ public class OpenBank extends Task {
     }
     @Override
     public boolean activate() {
-        System.out.println(GEctofuntus.currentTask);
-        if (Constants.BANK_AREA.contains(c.p().tile()) && !Bank.opened()) {
+        if (Bank.present() && !Bank.opened() && Constants.BANK_AREA.contains(c.p().tile())) {
             for (Map.Entry<String,Integer> entry : GEctofuntus.requiredItems.entrySet()) {
                 String itemName = entry.getKey();
                 int numOfItem = entry.getValue();
@@ -34,26 +33,13 @@ public class OpenBank extends Task {
             }
         }
         return false;
-
-//        if (Constants.BANK_AREA.contains(c.p().tile()) && !Bank.opened()) {
-//            if (Objects.equals(GEctofuntus.currentTask, "CrushBones")) {
-//                return Inventory.stream().name(GEctofuntus.bonemealType).count() == 13;
-//            } else if (Objects.equals(GEctofuntus.currentTask, "BuySlime")) {
-//                return Inventory.stream().name("Bucket of slime").count() == 27;
-//            } else if (Objects.equals(GEctofuntus.currentTask, "OfferBones")) {
-//                return Inventory.stream().name(GEctofuntus.bonemealType).isEmpty() || Inventory.stream().name("Bucket of slime").isEmpty();
-//            }
-//        }
-//        return false;
     }
 
     @Override
     public void execute() {
         GEctofuntus.currentState = Util.state("Opening bank");
-        if (Bank.present()) {
-            if (Bank.open()) {
-                Condition.wait(Bank::opened, 100, 20);
-            }
+        if (Bank.open()) {
+            Condition.wait(Bank::opened, 100, 20);
         }
     }
 }

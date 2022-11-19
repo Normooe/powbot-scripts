@@ -170,6 +170,7 @@ public class GEctofuntus extends AbstractScript {
             buySlimeTasks.add(new TradeCharter(this));
             buySlimeTasks.add(new BuyItem(this));
             buySlimeTasks.add(new CloseStore(this));
+            buySlimeTasks.add(new NeedToHop(this));
             buySlimeTasks.add(new HopWorlds(this));
         }
         if (needBonemeal) {

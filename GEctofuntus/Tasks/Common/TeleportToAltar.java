@@ -23,17 +23,18 @@ public class TeleportToAltar extends Task {
     }
     @Override
     public boolean activate() {
-        if (Objects.equals(GEctofuntus.currentTask, "CrushBones")) {
-            return Inventory.stream().name(GEctofuntus.boneType).count() == 13
-                    && Inventory.stream().name("Pot").count() == 13
-                    && !Bank.opened()
-                    && !Constants.ALTAR_BOT_FLOOR.contains(c.p().tile())
-                    && !Constants.ALTAR_TOP_FLOOR.contains(c.p().tile());
-        } else if (Objects.equals(GEctofuntus.currentTask, "OfferBones")) {
-            return Inventory.stream().name("Bucket of slime").count() == 13
-                    && Inventory.stream().name(GEctofuntus.bonemealType).count() == 13
-                    && !Bank.opened()
-                    && !Constants.ALTAR_BOT_FLOOR.contains(c.p().tile());
+        switch (GEctofuntus.currentTask) {
+            case "CrushBones":
+                return Inventory.stream().name(GEctofuntus.boneType).count() == 13
+                        && Inventory.stream().name("Pot").count() == 13
+                        && !Bank.opened()
+                        && !Constants.ALTAR_BOT_FLOOR.contains(c.p().tile())
+                        && !Constants.ALTAR_TOP_FLOOR.contains(c.p().tile());
+            case "OfferBones":
+                return Inventory.stream().name("Bucket of slime").count() == 13
+                        && Inventory.stream().name(GEctofuntus.bonemealType).count() == 13
+                        && !Bank.opened()
+                        && !Constants.ALTAR_BOT_FLOOR.contains(c.p().tile());
         }
         return false;
     }

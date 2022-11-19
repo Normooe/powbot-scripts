@@ -18,8 +18,7 @@ public class CloseStore extends Task {
     }
     @Override
     public boolean activate() {
-        return Store.opened()
-                && (Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize() == 0 || GEctofuntus.needToHop);
+        return Store.opened() && GEctofuntus.needToHop;
     }
 
     @Override

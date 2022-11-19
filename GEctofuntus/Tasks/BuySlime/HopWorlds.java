@@ -58,16 +58,13 @@ public class HopWorlds extends Task {
         }
         GEctofuntus.currentState = Util.state("Hopping worlds: " +hopWorld.getNumber());
         Game.tab(Game.Tab.LOGOUT);
-        if (hopWorld.valid()) {
-            System.out.println("hopWorld is valid. hopping");
-            if (hopWorld.hop()) {
-                Condition.wait(() -> Worlds.current().getNumber() == Constants.WORLD_LIST[worldIndex], 200, 20);
-                GEctofuntus.needToHop = false;
-                worldIndex++;
-                if (worldIndex > Constants.WORLD_LIST.length-1) {
-                    // Start at the beginning of our world list once we reach the end.
-                    worldIndex = 0;
-                }
+        if (hopWorld.valid() && hopWorld.hop()) {
+            Condition.wait(() -> Worlds.current().getNumber() == Constants.WORLD_LIST[worldIndex], 200, 20);
+            GEctofuntus.needToHop = false;
+            worldIndex++;
+            if (worldIndex > Constants.WORLD_LIST.length-1) {
+                // Start at the beginning of our world list once we reach the end.
+                worldIndex = 0;
             }
         }
     }

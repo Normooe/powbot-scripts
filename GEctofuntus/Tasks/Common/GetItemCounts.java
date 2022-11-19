@@ -33,11 +33,7 @@ public class GetItemCounts extends Task {
     public static void getItemCounts() {
         GEctofuntus.currentState = Util.state("Getting item counts");
         if (Bank.present()) {
-            if (!Bank.opened()) {
-                if (Bank.open()) {
-                    Condition.wait(Bank::opened, 100, 20);
-                }
-            } else {
+            if (Bank.opened()) {
                 GEctofuntus.currentState = Util.state("Checking bank");
                 GEctofuntus.boneCount = Bank.stream().name(GEctofuntus.boneType).first().stackSize();
                 GEctofuntus.bonemealCount = Bank.stream().name(GEctofuntus.bonemealType).first().stackSize();
@@ -55,6 +51,8 @@ public class GetItemCounts extends Task {
                 // verify functions could probably be refactored into 1 later.
                 GEctofuntus.needSlime = verifyNeedSlime();
                 GEctofuntus.needBonemeal = verifyNeedBonemeal();
+            } else if (Bank.open()) {
+                Condition.wait(Bank::opened, 100, 20);
             }
         }
     }

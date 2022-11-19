@@ -19,10 +19,10 @@ public class OfferBones extends Task {
     }
     @Override
     public boolean activate() {
-        return Constants.ALTAR_BOT_FLOOR.contains(c.p().tile())
-                && Inventory.stream().name(GEctofuntus.bonemealType).count() > 0
+        return !GEctofuntus.needToCollectTokens
                 && Inventory.stream().name("Bucket of slime").count() > 0
-                && !GEctofuntus.needToCollectTokens;
+                && Inventory.stream().name(GEctofuntus.bonemealType).count() > 0
+                && Constants.ALTAR_BOT_FLOOR.contains(c.p().tile());
     }
 
     @Override
@@ -39,12 +39,11 @@ public class OfferBones extends Task {
     public void offerBones() {
         Game.tab(Game.Tab.INVENTORY);
         GameObject ectofuntus = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Ectofuntus").nearest().first();
-        if (!ectofuntus.valid()) {
-            return;
-        }
-        Util.turnTo(ectofuntus);
         long bucketCount = Inventory.stream().name("Bucket of slime").count();
-        if (ectofuntus.interact("Worship")) {
+        if (!ectofuntus.inViewport()) {
+            Camera.turnTo(ectofuntus);
+            Condition.wait(ectofuntus::inViewport, 150, 20);
+        } else if (ectofuntus.valid() && ectofuntus.interact("Worship")) {
             Condition.wait(() -> Inventory.stream().name("Bucket of slime").count() < bucketCount, 100, 50);
         }
     }

@@ -42,9 +42,9 @@ public class Util {
         if (Game.loggedIn()) {
             if (Game.logout()) {
                 Condition.wait(() -> !Game.loggedIn(), 250, 50);
-                ScriptManager.INSTANCE.stop();
             }
         }
+        ScriptManager.INSTANCE.stop();
     }
 
     public static boolean turnTo(Npc npc) {

@@ -27,20 +27,12 @@ public class GoToCrusher extends Task {
     public void execute() {
         GEctofuntus.currentState = Util.state("Going to crusher");
         GameObject staircase = Objects.stream().name("Staircase").within(10).nearest().first();
-        if (staircase.valid()) {
-            if (staircase.inViewport()) {
-                if (staircase.interact("Climb-up")) {
-                    Condition.wait(() -> Constants.ALTAR_TOP_FLOOR.contains(c.p().tile()), 150, 40);
-                }
-            } else {
-                System.out.println("Turning camera to staircase");
-                Camera.turnTo(staircase);
-                Condition.wait(staircase::inViewport, 150, 20);
-            }
+        Game.closeOpenTab();
+        if (!staircase.inViewport()) {
+            Camera.turnTo(staircase);
+            Condition.wait(staircase::inViewport, 150, 20);
+        } else if (staircase.valid() && staircase.interact("Climb-up")) {
+            Condition.wait(() -> Constants.ALTAR_TOP_FLOOR.contains(c.p().tile()), 150, 40);
         }
     }
 }
-
-//        if (Game.closeOpenTab()) {
-//                Condition.wait(() -> Game.ta == null, 150, 20);
-//                }

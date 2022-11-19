@@ -21,16 +21,17 @@ public class CloseBank extends Task {
     }
     @Override
     public boolean activate() {
-        if (Objects.equals(GEctofuntus.currentTask, "CrushBones")) {
-            return Bank.opened()
-                    && Inventory.stream().name(GEctofuntus.boneType).count() == 13
-                    && Inventory.stream().name("Pot").count() == 13
-                    && Inventory.stream().name("Ectophial").count() == 1;
-        } else if (Objects.equals(GEctofuntus.currentTask, "OfferBones")) {
-            return Bank.opened()
-                    && Inventory.stream().name(GEctofuntus.bonemealType).count() == 13
-                    && Inventory.stream().name("Bucket of slime").count() == 13
-                    && Inventory.stream().name("Ectophial").count() == 1;
+        switch (GEctofuntus.currentTask) {
+            case "CrushBones":
+                return Bank.opened()
+                        && Inventory.stream().name(GEctofuntus.boneType).count() == 13
+                        && Inventory.stream().name("Pot").count() == 13
+                        && Inventory.stream().name("Ectophial").count() == 1;
+            case "OfferBones":
+                return Bank.opened()
+                        && Inventory.stream().name(GEctofuntus.bonemealType).count() == 13
+                        && Inventory.stream().name("Bucket of slime").count() == 13
+                        && Inventory.stream().name("Ectophial").count() == 1;
         }
         return false;
     }

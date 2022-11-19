@@ -20,24 +20,19 @@ public class BuyItem extends Task {
 
     @Override
     public boolean activate() {
-        return Store.opened() && !Inventory.isFull();
+        return Store.opened()
+                && !Inventory.isFull()
+                && Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize() > 0;
     }
 
     @Override
     public void execute() {
-        GEctofuntus.currentState = Util.state("Buying slime");
         int slimeInStore = Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize();
-        if (slimeInStore > 0) {
-            if (Store.buy(Constants.BUCKET_OF_SLIME_ID, 10)) {
-                int newSlimeInStore = Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize();
-                Condition.wait(() -> newSlimeInStore != slimeInStore, 100, 10);
-                GEctofuntus.slimeCounter += slimeInStore - newSlimeInStore;
-                if (newSlimeInStore == 0) {
-                    GEctofuntus.needToHop = true;
-                }
-            }
-        } else {
-            GEctofuntus.needToHop = true;
+        GEctofuntus.currentState = Util.state("Buying slime");
+        if (Store.buy(Constants.BUCKET_OF_SLIME_ID, 10)) {
+            int newSlimeInStore = Store.getItem(Constants.BUCKET_OF_SLIME_ID).itemStackSize();
+            Condition.wait(() -> newSlimeInStore != slimeInStore, 150, 20);
+            GEctofuntus.slimeCounter += slimeInStore - newSlimeInStore;
         }
     }
 }
