@@ -28,9 +28,11 @@ public class LootSpore extends Task {
         Util.state("Looting seaweed spores");
         GroundItem spore = GroundItems.stream().name("Seaweed spore").nearest().first();
         if (spore.valid()) {
-            Util.turnTo(spore);
-            if (spore.interact("Take")) {
+            if (spore.inViewport() && spore.interact("Take")) {
                 Condition.wait(() -> !spore.valid(), 150, 20);
+            } else {
+                System.out.println("Turning camera to spore");
+                Camera.turnTo(spore);
             }
         }
     }

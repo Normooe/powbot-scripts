@@ -38,7 +38,7 @@ public class LoadGrinder extends Task {
                 if (loader.valid()) {
                     if (loader.inViewport() && loader.interact("Use", false)) {
                         GEctofuntus.needToLoadBones = false;
-                        Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800);
+                        Condition.wait(() -> Inventory.stream().name(GEctofuntus.bonemealType).count() == 13, 150, 800); // This conditional wait can cause a somewhat long afk sometimes. Should probably fix
                     } else {
                         System.out.println("Turning camera to loader");
                         Camera.turnTo(loader);

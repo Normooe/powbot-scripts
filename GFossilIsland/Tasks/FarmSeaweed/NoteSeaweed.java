@@ -34,9 +34,11 @@ public class NoteSeaweed extends Task {
             } else {
                 Npc leprechaun = Npcs.stream().name("Tool Leprechaun").nearest().first();
                 if (leprechaun.valid()) {
-                    Util.turnTo(leprechaun);
-                    if (leprechaun.interact("Use", false)) {
+                    if (leprechaun.inViewport() && leprechaun.interact("Use", false)) {
                         Condition.wait(() -> Inventory.stream().id(Constants.UNNOTED_GIANT_SEAWEED_ID).isEmpty(), 150, 20);
+                    } else {
+                        System.out.println("Turning camera to leprechaun");
+                        Camera.turnTo(leprechaun);
                     }
                 }
             }

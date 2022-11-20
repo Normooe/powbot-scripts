@@ -81,8 +81,7 @@ public class BankItems extends Task {
 
     public void depositAnyExcept(Map<String, Integer> requiredItems) {
         GEctofuntus.currentState = Util.state("Depositing items");
-        Item[] items = Inventory.items();
-        for (Item item : items) {
+        for (Item item : Inventory.items()) {
             if (!requiredItems.containsKey(item.name()) && item.interact("Deposit-All")) {
                 Condition.wait(() -> Inventory.stream().name(item.name()).isEmpty(), 150, 20);
             }
