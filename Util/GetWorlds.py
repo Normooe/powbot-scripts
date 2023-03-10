@@ -6,14 +6,20 @@ import requests
 import sys
 
 
-logging.basicConfig(level=logging.INFO)
-
 link = "https://oldschool.runescape.wiki/w/Server?action=edit&section=3"
 
+# Set print_all_worlds to True to get a print of world types if you feel like you need to add
+# more bad world identifiers.
+print_all_worlds = False
 bad_world_identifiers = ["switch", "pvp", "target", "bounty", "skill total", "speedrunning", "high risk"]
 get_members = True  # True for only p2p, False for only f2p.
 print_java_formatted_array = True
 worlds_per_line = 15  # Worlds per line in the formatted java array
+
+if print_all_worlds:
+	logging.basicConfig(level=logging.DEBUG)
+else:
+	logging.basicConfig(level=logging.INFO)
 
 
 def get_page_text(link: str) -> str:
@@ -44,6 +50,8 @@ def check_line(line: str) -> bool:
 	# Make sure the line of text is actually a world.
 	if "worldline" not in line:
 		return False
+	if print_all_worlds:
+		logging.debug("World(Debug): %s", line)
 	# Don't include any worlds with identifiers in the bad_world_identifiers list.
 	if any(bad_world_identifier in line for bad_world_identifier in bad_world_identifiers):
 		return False
