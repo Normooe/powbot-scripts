@@ -14,14 +14,15 @@ public class Util {
     }
 
     public static void cameraCheck() {
-        Game.tab(Game.Tab.SETTINGS);
         if (Camera.getZoom() > 1) {
             state("Zooming camera out");
-            Camera.moveZoomSlider(0);
-        }
-        if (Camera.pitch() < 90) {
-            state("Changing camera angle");
-            Camera.pitch(true);
+            if (Game.tab(Game.Tab.SETTINGS)) {
+                Camera.moveZoomSlider(0);
+            }
+            if (Camera.pitch() < 90) {
+                state("Changing camera angle");
+                Camera.pitch(true);
+            }
         }
     }
 

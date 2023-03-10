@@ -1,5 +1,12 @@
 package GFossilIsland;
 
+import GFossilIsland.Tasks.Common.BankItems;
+import GFossilIsland.Tasks.Common.CloseBank;
+import GFossilIsland.Tasks.Common.GoToBank;
+import GFossilIsland.Tasks.Common.OpenBank;
+import GFossilIsland.Tasks.CutTrees.CutTree;
+import GFossilIsland.Tasks.CutTrees.GoToTrees;
+import GFossilIsland.Tasks.CutTrees.PickupBirdsNest;
 import Util.Util;
 
 import GFossilIsland.Tasks.FarmSeaweed.LootSpore;
@@ -8,20 +15,33 @@ import GFossilIsland.Tasks.FarmSeaweed.PickSeaweed;
 
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.Players;
+import org.powbot.api.rt4.walking.model.Skill;
 import org.powbot.api.script.AbstractScript;
+import org.powbot.api.script.ScriptManifest;
+import org.powbot.api.script.paint.Paint;
+import org.powbot.api.script.paint.PaintBuilder;
+import org.powbot.api.script.paint.TrackInventoryOption;
 import org.powbot.mobile.service.ScriptUploader;
 
 import java.util.ArrayList;
 
+@ScriptManifest(
+        name = "GFossilIsland",
+        description = "Does multiple fossil island activities (simultaneously.)",
+        version = "0.0.1",
+        author = "Gavin101"
+)
+
 public class GFossilIsland extends AbstractScript {
     private ArrayList<Task> farmSeaweedTasks = new ArrayList<>();
+    private ArrayList<Task> cutTreesTasks = new ArrayList<>();
     private final Constants c = new Constants();
     // Script vars
     public static String currentState = "null";
 
     // Script uploader
     public static void main(String[] args) {
-        new ScriptUploader().uploadAndStart("GFossilIsland", "roary", "127.0.0.1:5615", true, true);
+        new ScriptUploader().uploadAndStart("GFossilIsland", "roary gim", "127.0.0.1:5615", true, false);
     }
     @Override
     public void poll() {
@@ -33,7 +53,7 @@ public class GFossilIsland extends AbstractScript {
     }
 
     public ArrayList<Task> getTaskList() {
-        return farmSeaweedTasks;
+        return cutTreesTasks;
     }
 
     public void onStart() {
@@ -43,8 +63,24 @@ public class GFossilIsland extends AbstractScript {
         Util.cameraCheck();
 
         // Farm Seaweed Tasks
-        farmSeaweedTasks.add(new PickSeaweed(this));
-        farmSeaweedTasks.add(new NoteSeaweed(this));
-        farmSeaweedTasks.add(new LootSpore(this));
+//        farmSeaweedTasks.add(new PickSeaweed(this));
+//        farmSeaweedTasks.add(new NoteSeaweed(this));
+//        farmSeaweedTasks.add(new LootSpore(this));
+        // Cut Trees Tasks
+        cutTreesTasks.add(new PickupBirdsNest(this));
+        cutTreesTasks.add(new CutTree(this));
+        cutTreesTasks.add(new GoToTrees(this));
+        cutTreesTasks.add(new GoToBank(this));
+        cutTreesTasks.add(new OpenBank(this));
+        cutTreesTasks.add(new BankItems(this));
+        cutTreesTasks.add(new CloseBank(this));
+
+
+        Paint paint = new PaintBuilder()
+                .addString(() -> "Current State: "      +currentState)
+                .trackSkill(Skill.Woodcutting)
+                .trackInventoryItem(Constants.TEAK_LOG_ID, "Teak Logs", TrackInventoryOption.QuantityChange)
+                .build();
+        addPaint(paint);
     }
 }
