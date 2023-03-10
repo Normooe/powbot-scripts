@@ -14,6 +14,7 @@ text = response.text.split("\n")
 bad_world_identifiers = ["switch", "pvp", "target", "bounty", "skill total", "speedrunning", "high risk"]
 get_members = True
 print_java_formatted_array = True
+worlds_per_line = 15  # Worlds per line in the formatted java array
 
 if get_members:
 	mems = "yes"
@@ -27,7 +28,7 @@ def format_worlds_string(worlds: list[int]) -> str:
 
 	formatted_worlds = ""
 	for number, world in enumerate(worlds):
-		if number % 15 == 0:
+		if number % worlds_per_line == 0:
 			formatted_worlds += "\n"
 		else:
 			formatted_worlds += f"{world}, "
