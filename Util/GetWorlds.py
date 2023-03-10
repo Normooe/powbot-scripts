@@ -59,7 +59,7 @@ for line in get_page_text(link=link):
 		world_number = line.split("|")[1]
 		# Add world to list
 		worlds.append(int(world_number))
-		logging.info(f"Adding world: {line}")
+		logging.info("Adding world: %s", line)
 
 
 logging.info("Worlds:\n%s", worlds)
