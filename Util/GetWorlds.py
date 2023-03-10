@@ -51,19 +51,23 @@ def check_line(line: str) -> bool:
 	return (get_members and "mems=yes" in line) or (not get_members and "mems=no" in line)
 
 
-worlds = []
-for line in get_page_text(link=link):
-	line = line.lower()
-	if check_line(line):
-		# line.split() = "worldLine", $worldNumber, $worldLocation, "mems=$yes/no"
-		world_number = line.split("|")[1]
-		# Add world to list
-		worlds.append(int(world_number))
-		logging.info("Adding world: %s", line)
+def main():
+	"""main function."""
+	worlds = []
+	for line in get_page_text(link=link):
+		line = line.lower()
+		if check_line(line):
+			# line.split() = "worldLine", $worldNumber, $worldLocation, "mems=$yes/no"
+			world_number = line.split("|")[1]
+			# Add world to list
+			worlds.append(int(world_number))
+			logging.info("Adding world: %s", line)
+
+	logging.info("Worlds:\n%s", worlds)
+	logging.info("Total worlds: %s", len(worlds))
+	if print_java_formatted_array:
+		formatted_string = format_worlds_string(worlds=worlds)
+		logging.info("Formatted java string:\n%s", formatted_string)
 
 
-logging.info("Worlds:\n%s", worlds)
-logging.info("Total worlds: %s", len(worlds))
-if print_java_formatted_array:
-	formatted_string = format_worlds_string(worlds=worlds)
-	logging.info("Formatted java string:\n%s", formatted_string)
+main()
