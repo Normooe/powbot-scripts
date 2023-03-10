@@ -41,11 +41,13 @@ def format_worlds_string(worlds: list[int]) -> str:
 
 def check_line(line: str) -> bool:
 	"""Checks that the world should be added to the list."""
-	# Don't include any worlds with identifiers in the bad_world_identifiers list.
+	# Make sure the line of text is actually a world.
 	if "worldline" not in line:
 		return False
+	# Don't include any worlds with identifiers in the bad_world_identifiers list.
 	if any(bad_world_identifier in line for bad_world_identifier in bad_world_identifiers):
 		return False
+	# Make sure the world is members or not based on get_members flag.
 	return (get_members and "mems=yes" in line) or (not get_members and "mems=no" in line)
 
 
