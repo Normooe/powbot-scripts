@@ -1,5 +1,5 @@
 # https://oldschool.runescape.wiki/w/Server?action=edit&section=3
-# `pip install requests` and run script to get list of valid members worlds.
+# `pip install requests` and run script to get list of valid worlds depending on set variables.
 
 import logging
 import requests
