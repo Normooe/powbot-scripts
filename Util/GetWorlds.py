@@ -8,13 +8,11 @@ import sys
 
 link = "https://oldschool.runescape.wiki/w/Server?action=edit&section=3"
 
-# Set print_all_worlds to True to get a print of world types if you feel like you need to add
-# more bad world identifiers.
-print_all_worlds = False
+print_all_worlds = False  # Useful for adding more bad world identifiers and other debugging.
 bad_world_identifiers = ["switch", "pvp", "target", "bounty", "skill total", "speedrunning", "high risk"]
 get_members = True  # True for only p2p, False for only f2p.
 print_java_formatted_array = True
-worlds_per_line = 15  # Worlds per line in the formatted java array
+worlds_per_line = 15  # Worlds per line in the formatted java array.
 
 if print_all_worlds:
 	logging.basicConfig(level=logging.DEBUG)
