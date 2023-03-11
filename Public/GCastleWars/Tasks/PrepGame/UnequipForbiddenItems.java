@@ -29,16 +29,12 @@ public class UnequipForbiddenItems extends Task {
         GCastleWars.currentState = Util.state("Unequipping head/back items");
         if (Game.tab(Game.Tab.EQUIPMENT)) {
             Item headSlot = Equipment.itemAt(Equipment.Slot.HEAD);
-            if (headSlot.valid()) {
-                if (headSlot.interact("Remove")) {
-                    Condition.wait(() -> !headSlot.valid(), 50, 20);
-                }
+            if (headSlot.valid() && headSlot.interact("Remove")) {
+                Condition.wait(() -> !headSlot.valid(), 50, 20);
             }
             Item capeSlot = Equipment.itemAt(Equipment.Slot.CAPE);
-            if (capeSlot.valid()) {
-                if (capeSlot.interact("Remove")) {
-                    Condition.wait(() -> !capeSlot.valid(), 50, 20);
-                }
+            if (capeSlot.valid() && capeSlot.interact("Remove")) {
+                Condition.wait(() -> !capeSlot.valid(), 50, 20);
             }
         }
     }
