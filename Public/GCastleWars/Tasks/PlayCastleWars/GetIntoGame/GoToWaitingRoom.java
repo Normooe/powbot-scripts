@@ -25,7 +25,7 @@ public class GoToWaitingRoom extends Task {
 
     @Override
     public void execute() {
-        GCastleWars.currentState = Util.state("Entering waitng room");
+        GCastleWars.currentState = Util.state("Entering waiting room");
         GameObject portal = Objects.stream(20).type(GameObject.Type.INTERACTIVE).name("Guthix Portal").nearest().first();
         if (portal.valid()) {
             if (portal.inViewport() && portal.interact("Enter")) {
