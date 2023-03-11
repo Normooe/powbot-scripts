@@ -61,15 +61,16 @@ public class Util {
     }
 
     public static boolean useEctophial() {
-        GEctofuntus.currentState = Util.state("Using ectophial");
-        Game.tab(Game.Tab.INVENTORY);
-        Item ectophial = Inventory.stream().name("Ectophial").first();
-        if (ectophial.valid() && ectophial.interact("Empty") && Condition.wait(() -> !ectophial.actions().contains("Empty"), 100, 40)) {
-            return true;
-        } else {
-            Util.endScript("No ectophial in inventory. Ending script");
-            return false;
+        Util.state("Using ectophial");
+        if (Game.tab(Game.Tab.INVENTORY)) {
+            Item ectophial = Inventory.stream().name("Ectophial").first();
+            if (ectophial.valid()) {
+                return ectophial.interact("Empty") && Condition.wait(() -> !ectophial.actions().contains("Empty"), 100, 40);
+            } else {
+                Util.endScript("No ectophial in inventory. Ending script");
+                return false;
+            }
         }
+        return false;
     }
 }
-
