@@ -42,7 +42,7 @@ public class StayLoggedIn extends Task {
     public void execute() {
         GCastleWars.currentState = Util.state("Clicking under character (Anti-afk)");
         if (Movement.step(c.p().tile())) {
-            sleepTime = Random.nextInt(30, 60);
+            sleepTime = Random.nextInt(30, 180);
             endTime = Instant.now().getEpochSecond();
             System.out.println("Next sleep: " +sleepTime);
         }
