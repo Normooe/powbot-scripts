@@ -11,11 +11,11 @@ import GCastleWars.Tasks.PlayCastleWars.GoToHidingSpot.GoBehindStairs;
 import GCastleWars.Tasks.PlayCastleWars.GoToHidingSpot.GoUpstairs;
 import GCastleWars.Tasks.PrepGame.UnequipForbiddenItems;
 import Util.Util;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.primitives.Ints;
 import org.powbot.api.Condition;
-import org.powbot.api.rt4.Equipment;
-import org.powbot.api.rt4.Inventory;
-import org.powbot.api.rt4.Worlds;
+import org.powbot.api.event.BreakEvent;
+import org.powbot.api.rt4.*;
 import org.powbot.api.script.AbstractScript;
 import org.powbot.api.script.ScriptManifest;
 import org.powbot.api.script.paint.Paint;
@@ -110,5 +110,14 @@ public class GCastleWars extends AbstractScript {
 
     public boolean onCastleWarsWorld(final int[] castleWarsWorlds) {
         return Ints.contains(castleWarsWorlds, Worlds.current().getNumber());
+    }
+
+    @Subscribe
+    public void onBreakEvent(BreakEvent e) {
+        // Delay break if we're in the middle of a game
+        if (Components.stream().anyMatch(i -> i.text().contains("= Saradomin"))) {
+            System.out.println("Delaying break 30 seconds while we're in a game");
+            e.delay(30_000);
+        }
     }
 }
