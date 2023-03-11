@@ -4,6 +4,7 @@ import GCastleWars.Constants;
 import GCastleWars.GCastleWars;
 import GCastleWars.Task;
 import Util.Util;
+import org.powbot.api.Condition;
 import org.powbot.api.Tile;
 import org.powbot.api.rt4.Movement;
 
@@ -27,14 +28,17 @@ public class GoBehindStairs extends Task {
     @Override
     public void execute() {
         GCastleWars.currentState = Util.state("Hiding behind stairs");
+        Tile hidingSpot = null;
         if (Constants.ZAMORAK_BASE_TOP.contains(c.p().tile())) {
             System.out.println("Hiding behind zammy stairs");
-            Tile hidingSpot = Constants.ZAMORAK_HIDING_SPOTS.getRandomTile();
-            Movement.step(hidingSpot);
+            hidingSpot = Constants.ZAMORAK_HIDING_SPOTS.getRandomTile();
         } else if (Constants.SARA_BASE_TOP.contains(c.p().tile())) {
             System.out.println("Hiding behind sara stairs");
-            Tile hidingSpot = Constants.SARA_HIDING_SPOTS.getRandomTile();
-            Movement.step(hidingSpot);
+            hidingSpot = Constants.SARA_HIDING_SPOTS.getRandomTile();
+        }
+        if (hidingSpot != null && Movement.step(hidingSpot)) {
+            Tile finalHidingSpot = hidingSpot;
+            Condition.wait(() -> c.p().tile().equals(finalHidingSpot), 100, 50);
         }
     }
 }
