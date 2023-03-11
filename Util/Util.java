@@ -1,6 +1,6 @@
 package Util;
 
-import GEctofuntus.GEctofuntus;
+import Public.GEctofuntus.GEctofuntus;
 import org.powbot.api.Condition;
 import org.powbot.api.rt4.*;
 import org.powbot.mobile.script.ScriptManager;
