@@ -20,7 +20,7 @@ public class UnequipForbiddenItems extends Task {
     }
     @Override
     public boolean activate() {
-        return Equipment.itemAt(Equipment.Slot.CAPE).equals("Hooded cloak")
+        return !Equipment.itemAt(Equipment.Slot.CAPE).name().equals("Hooded cloak")
                 && (Equipment.itemAt(Equipment.Slot.CAPE).valid() || Equipment.itemAt(Equipment.Slot.HEAD).valid());
     }
 
