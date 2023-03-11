@@ -41,6 +41,25 @@ public class Util {
         ScriptManager.INSTANCE.stop();
     }
 
+    public static String convertMsToMinutes(long milliseconds) {
+        long totalSeconds = milliseconds / 1000;
+        long seconds = totalSeconds % 60;
+        long totalMinutes = totalSeconds / 60;
+        long minutes = totalMinutes % 60;
+        long totalHours = totalMinutes / 60;
+        long hours = totalHours % 24;
+        long days = totalHours / 24;
+
+        // Return string formatted depending on if the value includes days, hours, etc.
+        if (days > 0) {
+            return String.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds);
+        } else if (hours > 0) {
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            return String.format("%02d:%02d", minutes, seconds);
+        }
+    }
+
     public static boolean useEctophial() {
         GEctofuntus.currentState = Util.state("Using ectophial");
         Game.tab(Game.Tab.INVENTORY);
