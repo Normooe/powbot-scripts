@@ -20,7 +20,8 @@ public class GoToWaitingRoom extends Task {
     @Override
     public boolean activate() {
         return c.p().movementAnimation() == c.p().idleAnimation()
-                && Constants.CASTLE_WARS_OUTSIDE.contains(c.p().tile());
+                && !Components.stream().anyMatch(i -> i.text().contains("= Saradomin"))
+                && !Components.stream().widget(Constants.TIME_UNTIL_START_WIDGET_PARENT).first().visible();
     }
 
     @Override
@@ -30,7 +31,13 @@ public class GoToWaitingRoom extends Task {
         if (portal.valid()) {
             if (portal.inViewport() && portal.interact("Enter")) {
                 Condition.wait(() -> Components.stream().widget(Constants.TIME_UNTIL_START_WIDGET_PARENT).first().visible(), 50, 20);
+            } else {
+                System.out.println("Moving to guthix portal");
+                Movement.moveTo(portal);
             }
+        } else {
+            GCastleWars.currentState = Util.state("Going to castle wars");
+            Movement.moveTo(Constants.CASTLE_WARS_OUTSIDE.getRandomTile());
         }
     }
 }
