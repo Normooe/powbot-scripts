@@ -21,7 +21,7 @@ public class Constants {
 
     public static final int FREE_SPACE_WIDGET_ID = 219;
 
-    public static int[] castleWarsWorlds = new int[] {383, 334, 354};
+    public static int[] CASTLE_WARS_WORLDS = new int[] {383, 334, 354};
 
     public static Area CASTLE_WARS_OUTSIDE = new Area(
             new Tile(2436, 3097, 0),

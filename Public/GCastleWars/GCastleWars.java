@@ -89,7 +89,7 @@ public class GCastleWars extends AbstractScript {
         Util.cameraCheck();
 
         currentState = Util.state("Checking that we're on a castle wars world");
-        if (!onCastleWarsWorld(Constants.castleWarsWorlds)) {
+        if (!onCastleWarsWorld(Constants.CASTLE_WARS_WORLDS)) {
             System.out.println(Worlds.current().getNumber() + " is not a Castle Wars world. Please hop and rerun.");
             ScriptManager.INSTANCE.stop();
         }
