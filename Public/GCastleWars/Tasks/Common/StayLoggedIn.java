@@ -44,7 +44,7 @@ public class StayLoggedIn extends Task {
         if (Movement.step(c.p().tile())) {
             sleepTime = Random.nextInt(30, 180);
             endTime = Instant.now().getEpochSecond();
-            System.out.println("Next sleep: " +sleepTime);
+            System.out.println("Next anti-afk click: " +sleepTime + " seconds.");
         }
     }
 }
