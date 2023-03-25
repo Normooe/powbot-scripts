@@ -32,7 +32,7 @@ public class GetGrinderStatus extends Task {
         GameObject boneGrinder = Objects.stream(10).type(GameObject.Type.INTERACTIVE).name("Bone grinder").nearest().first();
         if (boneGrinder.valid()) {
             if (boneGrinder.inViewport() && boneGrinder.interact("Status")) {
-                // This will set a flag using onMessage listener in org.gavin101.gectofuntus.java
+                // This will set a flag using onMessage listener in org.gavin101.pub.gectofuntus.java
                 Condition.wait(() -> GEctofuntus.needToCollectBones || GEctofuntus.needToLoadBones || GEctofuntus.needToWindGrinder, 150, 30);
             } else {
                 System.out.println("Turning camera to boneGrinder");

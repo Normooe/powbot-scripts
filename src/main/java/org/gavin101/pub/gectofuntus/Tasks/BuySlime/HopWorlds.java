@@ -40,10 +40,10 @@ public class HopWorlds extends Task {
 //                && !w.specialty().equals(World.Specialty.SKILL_REQUIREMENT)).first();
 //        Game.tab(Game.Tab.LOGOUT);
 //        if (world.valid()) {
-//            org.gavin101.gectofuntus.currentState = org.gavin101.util.state("Hopping worlds: " +world.getNumber());
+//            org.gavin101.pub.gectofuntus.currentState = org.gavin101.util.state("Hopping worlds: " +world.getNumber());
 //            if (world.hop()) {
 //                Condition.wait(() -> Worlds.current().getNumber() == world.getNumber(), 200, 30);
-//                org.gavin101.gectofuntus.needToHop = false;
+//                org.gavin101.pub.gectofuntus.needToHop = false;
 //            }
 //        }
 

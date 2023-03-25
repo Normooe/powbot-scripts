@@ -42,8 +42,8 @@ public class GetItemCounts extends Task {
                 System.out.println("Pot count: " +GEctofuntus.potCount);
 
                 // for testing
-//                org.gavin101.gectofuntus.boneCount = 50;
-//                org.gavin101.gectofuntus.slimeCount = 298;
+//                org.gavin101.pub.gectofuntus.boneCount = 50;
+//                org.gavin101.pub.gectofuntus.slimeCount = 298;
 
                 // verify functions could probably be refactored into 1 later.
                 GEctofuntus.needSlime = verifyNeedSlime();
