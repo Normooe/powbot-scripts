@@ -21,22 +21,22 @@ dependencies {
     implementation('com.google.guava:guava:31.1-jre') // needed for @Subscribe annotations / event bus
 }
 
-tasks.register('gBloodsJar', Jar) {
-    baseName = 'gbloods'
+tasks.register('gEctofuntusJar', Jar) {
+    baseName = 'gectofuntus'
     from sourceSets.main.output
     manifest {
-        attributes 'Implementation-Title': 'GBloods',
+        attributes 'Implementation-Title': 'GEctofuntus',
                 'Implementation-Version': '1.0-SNAPSHOT',
-                'Main-Class': 'org.gavin101.gbloods.GBloods'
+                'Main-Class': 'org.gavin101.pub.gectofuntus.GEctofuntus'
     }
 }
 
-tasks.register('gShieldsJar', Jar) {
-    baseName = 'gshields'
+tasks.register('gCastleWarsJar', Jar) {
+    baseName = 'gcastlewars'
     from sourceSets.main.output
     manifest {
         attributes 'Implementation-Title': 'GCastleWars',
                 'Implementation-Version': '1.0-SNAPSHOT',
-                'Main-Class': 'org.gavin101.gcastlewars.GCastleWars'
+                'Main-Class': 'org.gavin101.pub.gcastlewars.GCastleWars'
     }
 }
